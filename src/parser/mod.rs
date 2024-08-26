@@ -1,7 +1,6 @@
-mod models;
-
+mod schema;
 use crate::filesystem::SpecificationFile;
-use crate::parser::models::Swagger;
+use crate::parser::schema::swagger::Swagger;
 use serde_json::from_reader;
 use std::fs::File;
 use std::io::BufReader;

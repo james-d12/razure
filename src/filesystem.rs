@@ -50,7 +50,7 @@ fn get_json_files_for_directory(
 
                     match current_specification_file {
                         Some(current_specification_file) => {
-                            if &date_time > &current_specification_file.naive_date {
+                            if date_time > current_specification_file.naive_date {
                                 specification_files_hashmap.insert(
                                     key,
                                     SpecificationFile {

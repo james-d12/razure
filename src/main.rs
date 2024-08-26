@@ -13,9 +13,9 @@ fn main() {
     let specification_len = specifications.len();
 
     for (key, specification_file) in specifications.iter().take(10) {
-        let result = parse_specification_file(&specification_file);
+        let result = parse_specification_file(specification_file);
 
-        if result == false {
+        if !result {
             failed_parses += 1
         }
     }
