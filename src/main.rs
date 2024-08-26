@@ -9,7 +9,7 @@ use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
 use std::time::Instant;
-use std::fs;
+use std::{fs, result};
 
 struct SpecificationFile {
     pub file_path: String,
@@ -125,7 +125,7 @@ fn get_latest_stable_specifications() -> HashMap<String, SpecificationFile> {
     }
 }
 
-fn parse_specification_file(specification_file: &SpecificationFile)  {
+fn parse_specification_file(specification_file: &SpecificationFile) -> bool  {
     //println!("Parsing Specification File: {0}", specification_file.file_path);
     let file = File::open(&specification_file.file_path).expect("file not found");
     let reader = BufReader::new(file);
@@ -134,9 +134,10 @@ fn parse_specification_file(specification_file: &SpecificationFile)  {
     let swagger: serde_json::error::Result<Swagger> = from_reader(reader);
 
     match swagger {
-        Ok(Swagger) => {}
+        Ok(Swagger) => true,
         Err(error) => {
             eprintln!("Could not parse: {0} due to error: {1}", specification_file.file_path, error);
+            false
         }
     }
 }
@@ -145,10 +146,18 @@ fn main() {
     let now = Instant::now();
     let specifications = get_latest_stable_specifications();
     
+    let mut failed_parses = 0;
+    let specification_len = specifications.len();
+    
     for (key, specification_file) in specifications {
-        parse_specification_file(&specification_file);
+        let result = parse_specification_file(&specification_file);
+        
+        if result == true { failed_parses += 1 } 
     }
-
+    
+    
+    println!("Total number of failed parses: {0}/{1}", failed_parses, specification_len);
+    
     let elapsed = now.elapsed();
     println!("Elapsed: {:.2?}", elapsed);
 }

@@ -73,15 +73,43 @@ pub struct Response {
     schema: Option<Reference>,
 }
 
+#[derive(Debug)]
+pub enum SchemaType {
+    Object,
+    String
+}
+
+#[derive(Debug)]
+pub enum SchemaFormat {
+    DateTime,
+    String
+}
+
+#[derive(Deserialize, Debug)]
+pub struct DefinitionProperty {
+    description: String,
+    description_type: SchemaType,
+    format: Option<SchemaFormat>
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Definition {
+    description: String,
+    #[serde(rename = "type")]
+    definition_type: SchemaType,
+    properties: HashMap<String, DefinitionProperty>
+}
+
 #[derive(Deserialize, Debug)]
 pub struct Swagger {
     swagger: String,
     info: Info,
-    schemes: Vec<String>,
-    host: String,
-    consumes: Vec<String>,
-    produces: Vec<String>,
-    paths: HashMap<String, HashMap<Method, Option<Operation>>>,
+    schemes: Option<Vec<String>>,
+    host: Option<String>,
+    consumes: Option<Vec<String>>,
+    produces: Option<Vec<String>>,
+    paths: Option<HashMap<String, HashMap<Method, Option<Operation>>>>,
+    definition: Option<HashMap<String, Definition>> 
 }
 
 impl Display for Method {
@@ -118,6 +146,41 @@ impl<'de> Deserialize<'de> for Method {
     }
 }
 
+impl<'de> Deserialize<'de> for SchemaType {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let definition_type_str = String::deserialize(deserializer)?;
+
+        match definition_type_str.to_lowercase().as_str() {
+            "object" => Ok(SchemaType::Object),
+            "string" => Ok(SchemaType::String),
+            _ => Err(serde::de::Error::unknown_variant(
+                &definition_type_str,
+                &["object", "string"],
+            )),
+        }
+    }
+}
+
+impl<'de> Deserialize<'de> for SchemaFormat {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let schema_format_str = String::deserialize(deserializer)?;
+
+        match schema_format_str.to_lowercase().as_str() {
+            "date-time" => Ok(SchemaFormat::DateTime),
+            _ => Err(serde::de::Error::unknown_variant(
+                &schema_format_str,
+                &["date-time"],
+            )),
+        }
+    }
+}
+
 impl<'de> Deserialize<'de> for HttpStatus {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
@@ -142,7 +205,8 @@ impl<'de> Deserialize<'de> for HttpStatus {
 impl Swagger {
     pub fn walk(&self) {
         println!("{0}", self.info.title);
-        for (endpoint, path) in &self.paths {
+        
+        for (endpoint, path) in self.paths.as_ref().unwrap() {
             println!("----------------------");
             println!("Endpoint: {0}", endpoint);
             for (method, operation) in path {
