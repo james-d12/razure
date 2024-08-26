@@ -4,6 +4,7 @@ use crate::parser::schema::operation::Operation;
 use crate::parser::schema::parameter_type::ParameterType;
 use serde::Deserialize;
 use std::collections::HashMap;
+use crate::parser::schema::definition::Definition;
 
 #[derive(Deserialize, Debug)]
 pub struct Swagger {
@@ -14,18 +15,13 @@ pub struct Swagger {
     consumes: Option<Vec<String>>,
     produces: Option<Vec<String>>,
     paths: Option<HashMap<String, HashMap<Method, Option<Operation>>>>,
-    //definition: Option<HashMap<String, Definition>>
+    //definitions: Option<HashMap<String, Definition>>
 }
 
 impl Swagger {
     pub fn walk(&self) {
-        match &self.info {
-            Some(info) => println!("--------{0}-------- ", info.title),
-            None => println!("----------------------"),
-        }
-
         for (endpoint, path) in self.paths.as_ref().unwrap() {
-            println!(" Endpoint: {0}", endpoint);
+            println!(" Path: {0}", endpoint);
             for (method, operation) in path {
                 match operation {
                     Some(op) => {
@@ -43,7 +39,7 @@ impl Swagger {
                                     println!("    Path: {0}", reference.path);
                                 }
                                 ParameterType::Parameter(inline) => {
-                                    println!("  Parameter: ");
+                                    println!("  Inline Parameter: ");
                                 }
                             }
                         }

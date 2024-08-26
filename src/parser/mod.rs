@@ -15,7 +15,8 @@ pub fn parse_specification_file(specification_file: &SpecificationFile) -> bool 
 
     match swagger {
         Ok(swagger) => {
-            //swagger.walk();
+            println!("--------{0}------", specification_file.file_path);
+            swagger.walk();
             true
         }
         Err(error) => {

@@ -5,7 +5,7 @@ use std::collections::HashMap;
 
 #[derive(Deserialize, Debug)]
 pub struct Definition {
-    description: String,
+    pub description: String,
     #[serde(rename = "type")]
     definition_type: SchemaType,
     properties: HashMap<String, DefinitionProperty>,
