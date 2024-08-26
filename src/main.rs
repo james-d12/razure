@@ -1,15 +1,15 @@
 mod models;
 
+use crate::models::Swagger;
 use chrono::NaiveDate;
 use git2::Repository;
+use serde_json::from_reader;
 use std::collections::HashMap;
-use std::fs;
 use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
 use std::time::Instant;
-use serde_json::from_reader;
-use crate::models::Swagger;
+use std::fs;
 
 struct SpecificationFile {
     pub file_path: String,
@@ -82,27 +82,26 @@ fn get_json_files_for_directory(directory: &str) -> Result<HashMap<String, Speci
     Ok(specification_files_hashmap)
 }
 
-fn iterate_over_specifications(specification_path: &str) {
-    println!("Successfully cloned Azure Specification Repository");
+fn iterate_over_specifications(specification_path: &str) -> HashMap<String, SpecificationFile> {
     let json_files = get_json_files_for_directory(specification_path);
 
     match json_files {
         Ok(json_files) => {
-            for (_, specification_file) in json_files {
-                println!("{0} {1}", specification_file.file_path, specification_file.naive_date)
-            }
+            json_files
         }
         Err(error) => {
-            println!("There was an error whilst trying to get JSON files: {0}", error)
+            println!("There was an error whilst trying to get JSON files: {0}", error);
+            HashMap::new()
         }
     }
 }
 
-fn get_latest_stable_specifications() {
+fn get_latest_stable_specifications() -> HashMap<String, SpecificationFile> {
     // Download azure GitHub repo
     // Go through each file and get the latest stable *.json file
     // Put all these files in one flat directory.
 
+    println!("Getting latest Stable Azure Specifications");
     let url = "https://github.com/Azure/azure-rest-api-specs.git";
     let output_path = "C:\\Users\\User\\Downloads\\Output";
     let specification_path = format!("{0}\\specification", output_path);
@@ -110,30 +109,46 @@ fn get_latest_stable_specifications() {
     let already_downloaded = Path::new(output_path).exists();
 
     if already_downloaded {
-        iterate_over_specifications(&specification_path);
-        return;
+        println!("Azure Repository already downloaded.");
+        return iterate_over_specifications(&specification_path);
     }
 
-    let _ = match Repository::clone(url, output_path) {
+    match Repository::clone(url, output_path) {
         Ok(_) => iterate_over_specifications(&specification_path),
-        Err(error) => eprintln!(
-            "Failed to get Azure Specification Repository due to error: {0}",
-            error
-        ),
-    };
+        Err(error) => {
+            eprintln!(
+                "Failed to get Azure Specification Repository due to error: {0}",
+                error
+            );
+            HashMap::new()
+        }
+    }
 }
 
-fn parse_specification_file(specification_file: &SpecificationFile) {
+fn parse_specification_file(specification_file: &SpecificationFile)  {
+    //println!("Parsing Specification File: {0}", specification_file.file_path);
     let file = File::open(&specification_file.file_path).expect("file not found");
     let reader = BufReader::new(file);
 
     // Deserialize the JSON content to `Swagger`.
-    let swagger: Swagger = from_reader(reader).expect("error while reading or parsing JSON");
+    let swagger: serde_json::error::Result<Swagger> = from_reader(reader);
+
+    match swagger {
+        Ok(Swagger) => {}
+        Err(error) => {
+            eprintln!("Could not parse: {0} due to error: {1}", specification_file.file_path, error);
+        }
+    }
 }
 
 fn main() {
     let now = Instant::now();
-    get_latest_stable_specifications();
+    let specifications = get_latest_stable_specifications();
+    
+    for (key, specification_file) in specifications {
+        parse_specification_file(&specification_file);
+    }
+
     let elapsed = now.elapsed();
     println!("Elapsed: {:.2?}", elapsed);
 }
