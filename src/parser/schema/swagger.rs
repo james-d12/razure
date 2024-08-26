@@ -4,7 +4,6 @@ use crate::parser::schema::operation::Operation;
 use crate::parser::schema::parameter_type::ParameterType;
 use serde::Deserialize;
 use std::collections::HashMap;
-use crate::parser::schema::definition::Definition;
 
 #[derive(Deserialize, Debug)]
 pub struct Swagger {
@@ -14,8 +13,7 @@ pub struct Swagger {
     host: Option<String>,
     consumes: Option<Vec<String>>,
     produces: Option<Vec<String>>,
-    paths: Option<HashMap<String, HashMap<Method, Option<Operation>>>>,
-    //definitions: Option<HashMap<String, Definition>>
+    paths: Option<HashMap<String, HashMap<Method, Option<Operation>>>>
 }
 
 impl Swagger {

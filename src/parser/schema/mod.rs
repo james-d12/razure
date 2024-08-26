@@ -1,5 +1,3 @@
-mod definition;
-mod definition_property;
 mod http_status;
 mod info;
 mod method;
