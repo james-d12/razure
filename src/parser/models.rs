@@ -9,6 +9,7 @@ pub enum Method {
     Put,
     Delete,
     Patch,
+    Head,
 }
 
 #[derive(Debug)]
@@ -30,7 +31,7 @@ pub struct PathItem {
 pub struct Info {
     title: String,
     version: String,
-    description: String,
+    description: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -38,8 +39,8 @@ pub struct Operation {
     #[serde(rename = "operationId")]
     id: String,
     #[serde(rename = "x-ms-examples")]
-    examples: HashMap<String, Reference>,
-    description: String,
+    examples: Option<HashMap<String, Reference>>,
+    description: Option<String>,
     parameters: Vec<Parameter>,
     responses: HashMap<String, Response>,
 }
@@ -65,31 +66,32 @@ pub struct InlineParameter {
     location: Option<String>,
     required: Option<bool>,
     schema: Option<Reference>, // Inline schema reference
+    type_id: Option<SchemaType>,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct Response {
-    description: String,
-    schema: Option<Reference>,
+    description: Option<String>,
+    schema: Option<Parameter>,
 }
 
 #[derive(Debug)]
 pub enum SchemaType {
     Object,
-    String
+    String,
 }
 
 #[derive(Debug)]
 pub enum SchemaFormat {
     DateTime,
-    String
+    String,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct DefinitionProperty {
     description: String,
     description_type: SchemaType,
-    format: Option<SchemaFormat>
+    format: Option<SchemaFormat>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -97,7 +99,7 @@ pub struct Definition {
     description: String,
     #[serde(rename = "type")]
     definition_type: SchemaType,
-    properties: HashMap<String, DefinitionProperty>
+    properties: HashMap<String, DefinitionProperty>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -109,7 +111,7 @@ pub struct Swagger {
     consumes: Option<Vec<String>>,
     produces: Option<Vec<String>>,
     paths: Option<HashMap<String, HashMap<Method, Option<Operation>>>>,
-    definition: Option<HashMap<String, Definition>> 
+    //definition: Option<HashMap<String, Definition>>
 }
 
 impl Display for Method {
@@ -120,6 +122,7 @@ impl Display for Method {
             Method::Put => "PUT",
             Method::Delete => "DELETE",
             Method::Patch => "PATCH",
+            Method::Head => "HEAD",
         };
         write!(f, "{}", method_str)
     }
@@ -138,9 +141,10 @@ impl<'de> Deserialize<'de> for Method {
             "put" => Ok(Method::Put),
             "delete" => Ok(Method::Put),
             "patch" => Ok(Method::Put),
+            "head" => Ok(Method::Head),
             _ => Err(serde::de::Error::unknown_variant(
                 &method_str,
-                &["post", "get", "put", "delete", "patch"],
+                &["post", "get", "put", "delete", "patch", "head"],
             )),
         }
     }
@@ -205,7 +209,7 @@ impl<'de> Deserialize<'de> for HttpStatus {
 impl Swagger {
     pub fn walk(&self) {
         println!("{0}", self.info.title);
-        
+
         for (endpoint, path) in self.paths.as_ref().unwrap() {
             println!("----------------------");
             println!("Endpoint: {0}", endpoint);
@@ -214,7 +218,10 @@ impl Swagger {
                     Some(op) => {
                         println!("Method: {0}", method);
                         println!("Id: {0}", op.id);
-                        println!("Description: {0}", op.description);
+
+                        if let Some(description) = &op.description {
+                            println!("Description: {0}", description);
+                        }
 
                         for parameter in &op.parameters {
                             match parameter {
