@@ -78,7 +78,7 @@ fn get_json_files_for_directory(
     Ok(specification_files_hashmap)
 }
 
-fn iterate_over_specifications(specification_path: &str) -> HashMap<String, SpecificationFile> {
+fn get_specification_files(specification_path: &str) -> HashMap<String, SpecificationFile> {
     let json_files = get_json_files_for_directory(specification_path);
 
     json_files.unwrap_or_else(|error| {
@@ -104,11 +104,11 @@ pub fn get_latest_stable_specifications() -> HashMap<String, SpecificationFile> 
 
     if already_downloaded {
         println!("Azure Repository already downloaded.");
-        return iterate_over_specifications(&specification_path);
+        return get_specification_files(&specification_path);
     }
 
     match Repository::clone(url, output_path) {
-        Ok(_) => iterate_over_specifications(&specification_path),
+        Ok(_) => get_specification_files(&specification_path),
         Err(error) => {
             eprintln!(
                 "Failed to get Azure Specification Repository due to error: {0}",

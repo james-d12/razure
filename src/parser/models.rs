@@ -32,6 +32,9 @@ pub struct Info {
     title: String,
     version: String,
     description: Option<String>,
+    summary: Option<String>,
+    #[serde(rename = "termsOfService")]
+    terms_of_service: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -41,15 +44,15 @@ pub struct Operation {
     #[serde(rename = "x-ms-examples")]
     examples: Option<HashMap<String, Reference>>,
     description: Option<String>,
-    parameters: Vec<Parameter>,
+    parameters: Vec<ParameterType>,
     responses: HashMap<String, Response>,
 }
 
 #[derive(Deserialize, Debug)]
 #[serde(untagged)]
-pub enum Parameter {
-    Ref(Reference),          // For `$ref` parameters
-    Inline(InlineParameter), // For inline parameters with more details
+pub enum ParameterType {
+    Parameter(Parameter), // For inline parameters with more details
+    Reference(Reference), // For `$ref` parameters
 }
 
 #[derive(Deserialize, Debug)]
@@ -60,7 +63,7 @@ pub struct Reference {
 
 // Define the struct for inline parameters
 #[derive(Deserialize, Debug)]
-pub struct InlineParameter {
+pub struct Parameter {
     name: Option<String>,
     #[serde(rename = "in")]
     location: Option<String>,
@@ -72,13 +75,17 @@ pub struct InlineParameter {
 #[derive(Deserialize, Debug)]
 pub struct Response {
     description: Option<String>,
-    schema: Option<Parameter>,
+    schema: Option<ParameterType>,
 }
 
 #[derive(Debug)]
 pub enum SchemaType {
     Object,
     String,
+    Number,
+    Integer,
+    Boolean,
+    Array,
 }
 
 #[derive(Debug)]
@@ -92,6 +99,8 @@ pub struct DefinitionProperty {
     description: String,
     description_type: SchemaType,
     format: Option<SchemaFormat>,
+    #[serde(rename = "readOnly")]
+    read_only: Option<bool>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -105,7 +114,7 @@ pub struct Definition {
 #[derive(Deserialize, Debug)]
 pub struct Swagger {
     swagger: String,
-    info: Info,
+    info: Option<Info>,
     schemes: Option<Vec<String>>,
     host: Option<String>,
     consumes: Option<Vec<String>>,
@@ -139,8 +148,8 @@ impl<'de> Deserialize<'de> for Method {
             "post" => Ok(Method::Post),
             "get" => Ok(Method::Get),
             "put" => Ok(Method::Put),
-            "delete" => Ok(Method::Put),
-            "patch" => Ok(Method::Put),
+            "delete" => Ok(Method::Delete),
+            "patch" => Ok(Method::Patch),
             "head" => Ok(Method::Head),
             _ => Err(serde::de::Error::unknown_variant(
                 &method_str,
@@ -158,8 +167,12 @@ impl<'de> Deserialize<'de> for SchemaType {
         let definition_type_str = String::deserialize(deserializer)?;
 
         match definition_type_str.to_lowercase().as_str() {
-            "object" => Ok(SchemaType::Object),
             "string" => Ok(SchemaType::String),
+            "number" => Ok(SchemaType::Number),
+            "integer" => Ok(SchemaType::Integer),
+            "boolean" => Ok(SchemaType::Boolean),
+            "array" => Ok(SchemaType::Array),
+            "object" => Ok(SchemaType::Object),
             _ => Err(serde::de::Error::unknown_variant(
                 &definition_type_str,
                 &["object", "string"],
@@ -208,7 +221,10 @@ impl<'de> Deserialize<'de> for HttpStatus {
 
 impl Swagger {
     pub fn walk(&self) {
-        println!("{0}", self.info.title);
+        match &self.info {
+            Some(info) => println!("{0}", info.title),
+            None => {}
+        }
 
         for (endpoint, path) in self.paths.as_ref().unwrap() {
             println!("----------------------");
@@ -225,11 +241,11 @@ impl Swagger {
 
                         for parameter in &op.parameters {
                             match parameter {
-                                Parameter::Ref(reference) => {
+                                ParameterType::Reference(reference) => {
                                     println!("Ref Parameter");
                                     println!("  Path: {0}", reference.path);
                                 }
-                                Parameter::Inline(inline) => {
+                                ParameterType::Parameter(inline) => {
                                     println!("Inline Parameter");
                                 }
                             }

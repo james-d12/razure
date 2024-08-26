@@ -1,10 +1,10 @@
 mod models;
 
-use std::fs::File;
-use std::io::BufReader;
-use serde_json::from_reader;
 use crate::filesystem::SpecificationFile;
 use crate::parser::models::Swagger;
+use serde_json::from_reader;
+use std::fs::File;
+use std::io::BufReader;
 
 pub fn parse_specification_file(specification_file: &SpecificationFile) -> bool {
     //println!("Parsing Specification File: {0}", specification_file.file_path);
@@ -15,7 +15,10 @@ pub fn parse_specification_file(specification_file: &SpecificationFile) -> bool 
     let swagger: serde_json::error::Result<Swagger> = from_reader(reader);
 
     match swagger {
-        Ok(Swagger) => true,
+        Ok(swagger) => {
+            swagger.walk();
+            true
+        }
         Err(error) => {
             eprintln!(
                 "Could not parse: {0} due to error: {1}",
