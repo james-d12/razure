@@ -12,7 +12,7 @@ fn main() {
     let mut failed_parses = 0;
     let specification_len = specifications.len();
 
-    for (key, specification_file) in specifications.iter().take(10) {
+    for (key, specification_file) in specifications.iter().take(1) {
         let result = parse_specification_file(&specification_file);
 
         if !result {
@@ -20,10 +20,10 @@ fn main() {
         }
     }
 
-    println!(
-        "Total number of failed parses: {0}/{1}",
-        failed_parses, specification_len
-    );
+    //println!(
+    //    "Total number of failed parses: {0}/{1}",
+    //    failed_parses, specification_len
+    //);
 
     let elapsed = now.elapsed();
     println!("Elapsed: {:.2?}", elapsed);
