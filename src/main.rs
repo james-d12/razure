@@ -12,8 +12,8 @@ fn main() {
     let mut failed_parses = 0;
     let specification_len = specifications.len();
 
-    for (key, specification_file) in specifications.iter().take(10) {
-        let result = parse_specification_file(specification_file);
+    for (key, specification_file) in specifications {
+        let result = parse_specification_file(&specification_file);
 
         if !result {
             failed_parses += 1
