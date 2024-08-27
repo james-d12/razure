@@ -90,10 +90,47 @@ fn get_specification_files(specification_path: &str) -> HashMap<String, Specific
     })
 }
 
+fn validate_output_path(output_path: &str) -> bool {
+    let output_path_exists = Path::new(output_path).try_exists();
+
+    match output_path_exists {
+        Ok(exists) => {
+            if !exists {
+                println!(
+                    "Output path: {0} does not exist. Creating now.",
+                    output_path
+                );
+
+                if let Err(_) = fs::create_dir(output_path) {
+                    return false;
+                }
+            }
+
+            true
+        }
+        Err(_) => {
+            eprintln!(
+                "Output path: {0} does not exist. Creating now.",
+                output_path
+            );
+            if let Err(_) = fs::create_dir(output_path) {
+                return false;
+            }
+            true
+        }
+    }
+}
+
 pub fn get_latest_stable_specifications(output_path: &str) -> HashMap<String, SpecificationFile> {
     // Download azure GitHub repo
     // Go through each file and get the latest stable *.json file
     // Put all these files in one flat directory.
+
+    let is_output_path_valid = validate_output_path(output_path);
+
+    if !is_output_path_valid {
+        return HashMap::new();
+    }
 
     println!("Getting latest Stable Azure Specifications");
     let url = "https://github.com/Azure/azure-rest-api-specs.git";
