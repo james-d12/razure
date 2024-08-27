@@ -1,6 +1,5 @@
 mod http_status;
 mod info;
-mod method;
 mod operation;
 mod parameter;
 mod parameter_type;
