@@ -7,7 +7,8 @@ use std::time::Instant;
 
 fn main() {
     let now = Instant::now();
-    let specifications = get_latest_stable_specifications();
+    let output_path = "C:\\Users\\User\\Downloads\\Output";
+    let specifications = get_latest_stable_specifications(output_path);
 
     let mut failed_parses = 0;
     let specification_len = specifications.len();

@@ -90,14 +90,13 @@ fn get_specification_files(specification_path: &str) -> HashMap<String, Specific
     })
 }
 
-pub fn get_latest_stable_specifications() -> HashMap<String, SpecificationFile> {
+pub fn get_latest_stable_specifications(output_path: &str) -> HashMap<String, SpecificationFile> {
     // Download azure GitHub repo
     // Go through each file and get the latest stable *.json file
     // Put all these files in one flat directory.
 
     println!("Getting latest Stable Azure Specifications");
     let url = "https://github.com/Azure/azure-rest-api-specs.git";
-    let output_path = "C:\\Users\\User\\Downloads\\Output";
     let specification_path = format!("{0}\\specification", output_path);
 
     let already_downloaded = Path::new(output_path).exists();
