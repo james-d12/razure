@@ -1,7 +1,7 @@
-use std::collections::HashMap;
 use crate::parser::schema::operation::Operation;
-use serde::Deserialize;
 use crate::parser::schema::parameter::Parameter;
+use serde::Deserialize;
+use std::collections::HashMap;
 
 #[derive(Deserialize, Debug)]
 pub struct PathItem {
@@ -18,10 +18,9 @@ pub struct PathItem {
 }
 
 impl PathItem {
-    
     pub fn get_operations(&self) -> HashMap<String, &Operation> {
         let mut operations: HashMap<String, &Operation> = HashMap::new();
-        
+
         if let Some(get) = &self.get {
             operations.insert("GET".to_string(), &get);
         }
@@ -41,7 +40,7 @@ impl PathItem {
         if let Some(options) = &self.options {
             operations.insert("OPTIONS".to_string(), &options);
         }
-        
+
         if let Some(head) = &self.head {
             operations.insert("HEAD".to_string(), &head);
         }
@@ -49,7 +48,7 @@ impl PathItem {
         if let Some(patch) = &self.patch {
             operations.insert("PATCH".to_string(), &patch);
         }
-        
+
         operations
     }
 }

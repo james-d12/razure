@@ -29,20 +29,24 @@ impl Display for ParameterType {
 
 #[derive(Deserialize, Debug)]
 pub struct Parameter {
-    name: Option<String>,
-    description: Option<String>,
+    pub name: Option<String>,
+    pub description: Option<String>,
     #[serde(rename = "in")]
-    location: Option<String>,
-    required: Option<bool>,
-    schema: Option<Reference>,
+    pub location: Option<String>,
+    pub required: Option<bool>,
+    pub schema: Option<Reference>,
     #[serde(rename = "type")]
-    parameter_type: Option<ParameterType>,
+    pub parameter_type: Option<ParameterType>,
+    #[serde(rename = "minLength")]
+    pub min_length: Option<u16>,
+    #[serde(rename = "maxLength")]
+    pub max_length: Option<u16>,
 }
 
 impl Parameter {
     pub fn print(&self) {
         println!(
-            " Name: {0}\n Description: {1}\n Required: {2}\n Type: {3}",
+            "  Name: {0}\n  Description: {1}\n  Required: {2}\n  Type: {3}",
             self.name.as_deref().unwrap_or(""),
             self.location.as_deref().unwrap_or(""),
             self.required.unwrap_or(false),

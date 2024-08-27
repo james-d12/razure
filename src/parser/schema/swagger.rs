@@ -1,9 +1,10 @@
 use crate::parser::schema::info::Info;
 use crate::parser::schema::parameter::Parameter;
 use crate::parser::schema::parameter_type::ParameterType;
+use crate::parser::schema::path_item::PathItem;
+use crate::parser::schema::schema_object::SchemaDefinition;
 use serde::Deserialize;
 use std::collections::HashMap;
-use crate::parser::schema::path_item::PathItem;
 
 #[derive(Deserialize, Debug)]
 pub struct Swagger {
@@ -15,14 +16,24 @@ pub struct Swagger {
     produces: Option<Vec<String>>,
     paths: Option<HashMap<String, PathItem>>,
     parameters: Option<HashMap<String, Parameter>>,
+    definitions: HashMap<String, SchemaDefinition>,
 }
 
 impl Swagger {
-    pub fn print_parameters(&self) {
+    fn print_overview(&self) {
+        if let Some(info) = &self.info {
+            println!("{0}", info.title);
+            if let Some(description) = &info.description {
+                println!("{0}", description);
+            }
+        }
+    }
+
+    fn print_parameters(&self) {
         match &self.parameters {
             Some(parameters) => {
                 for (key, parameter) in parameters {
-                    println!("{0}", key);
+                    println!(" Parameter: {0}", key);
                     parameter.print();
                 }
             }
@@ -42,14 +53,14 @@ impl Swagger {
                     println!("  Description: {0}", description);
                 }
 
+                println!("  Parameters:");
                 for parameter in &operation.parameters {
                     match parameter {
-                        ParameterType::Reference(reference) => {
-                            println!("  Ref Parameter");
-                            println!("    Path: {0}", reference.path);
-                        }
+                        ParameterType::Reference(reference) => {}
                         ParameterType::Parameter(inline) => {
-                            println!("  Inline Parameter: ");
+                            if let Some(name) = &inline.name {
+                                println!("   {0}:", name);
+                            }
                         }
                     }
                 }
@@ -57,8 +68,20 @@ impl Swagger {
         }
     }
 
+    fn print_definitions(&self) {
+        for (name, schema_definition) in self.definitions.iter() {
+            println!(" Definition: {0}", name);
+
+            if let Some(description) = &schema_definition.description {
+                println!("  Description: {0}", description);
+            }
+        }
+    }
+
     pub fn walk(&self) {
+        self.print_overview();
         self.print_paths();
-        self.print_parameters()
+        self.print_parameters();
+        self.print_definitions();
     }
 }
