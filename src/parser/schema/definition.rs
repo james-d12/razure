@@ -1,18 +1,30 @@
+use crate::parser::schema::reference::Reference;
 use serde::Deserialize;
 use serde_json::Value;
 use std::collections::HashMap;
 
 #[derive(Debug, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum DefinitionPropertyType {
+    Object,
+    String,
+    Number,
+    Integer,
+    Boolean,
+    Array,
+}
+
+#[derive(Debug, Deserialize)]
 #[serde(untagged)]
-pub enum SchemaType {
+pub enum DefinitionType {
     Object {
         #[serde(flatten)]
-        properties: HashMap<String, SchemaProperty>,
+        properties: HashMap<String, DefinitionProperty>,
         #[serde(flatten)]
         additional: HashMap<String, Value>,
     },
     Array {
-        items: Box<SchemaType>,
+        items: Box<DefinitionType>,
         #[serde(flatten)]
         additional: HashMap<String, Value>,
     },
@@ -35,16 +47,16 @@ pub enum SchemaType {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct SchemaProperty {
+pub struct DefinitionProperty {
     #[serde(flatten)]
-    pub schema: SchemaType,
+    pub schema: DefinitionType,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pattern: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "type")]
-    pub schema_type: Option<String>,
+    pub definition_property_type: Option<DefinitionPropertyType>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "$ref")]
     pub reference: Option<String>,
@@ -54,19 +66,14 @@ pub struct SchemaProperty {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct SchemaDefinition {
+pub struct Definition {
     #[serde(flatten)]
-    pub schema: SchemaType,
+    pub schema: DefinitionType,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub required: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub allOf: Option<Vec<Reference>>,
+    #[serde(rename = "allOf")]
+    pub all_of: Option<Vec<Reference>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Reference {
-    #[serde(rename = "$ref")]
-    pub ref_path: String,
 }

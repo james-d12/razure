@@ -5,7 +5,7 @@ use serde_json::from_reader;
 use std::fs::File;
 use std::io::BufReader;
 
-pub fn parse_specification_file(specification_file: &SpecificationFile) -> bool {
+pub fn parse_specification_file(specification_file: &SpecificationFile, print: bool) -> bool {
     //println!("Parsing Specification File: {0}", specification_file.file_path);
     let file = File::open(&specification_file.file_path).expect("file not found");
     let reader = BufReader::new(file);
@@ -15,8 +15,11 @@ pub fn parse_specification_file(specification_file: &SpecificationFile) -> bool 
 
     match swagger {
         Ok(swagger) => {
-            println!("--------{0}------", specification_file.file_path);
-            swagger.walk();
+            if print {
+                println!("--------{0}------", specification_file.file_path);
+                swagger.walk();
+            }
+
             true
         }
         Err(error) => {

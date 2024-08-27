@@ -1,4 +1,4 @@
-mod http_status;
+mod definition;
 mod info;
 mod operation;
 mod parameter;
@@ -7,6 +7,4 @@ mod path_item;
 mod reference;
 mod response;
 mod schema_format;
-mod schema_object;
-mod schema_type;
 pub mod swagger;

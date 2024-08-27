@@ -9,8 +9,8 @@ pub struct Operation {
     #[serde(rename = "operationId")]
     pub id: String,
     #[serde(rename = "x-ms-examples")]
-    examples: Option<HashMap<String, Reference>>,
+    pub examples: Option<HashMap<String, Reference>>,
     pub description: Option<String>,
     pub parameters: Vec<ParameterType>,
-    responses: HashMap<String, Response>,
+    pub responses: HashMap<String, Response>,
 }

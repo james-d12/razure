@@ -1,8 +1,8 @@
+use crate::parser::schema::definition::Definition;
 use crate::parser::schema::info::Info;
 use crate::parser::schema::parameter::Parameter;
 use crate::parser::schema::parameter_type::ParameterType;
 use crate::parser::schema::path_item::PathItem;
-use crate::parser::schema::schema_object::SchemaDefinition;
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -16,7 +16,7 @@ pub struct Swagger {
     produces: Option<Vec<String>>,
     paths: Option<HashMap<String, PathItem>>,
     parameters: Option<HashMap<String, Parameter>>,
-    definitions: HashMap<String, SchemaDefinition>,
+    definitions: Option<HashMap<String, Definition>>,
 }
 
 impl Swagger {
@@ -69,7 +69,7 @@ impl Swagger {
     }
 
     fn print_definitions(&self) {
-        for (name, schema_definition) in self.definitions.iter() {
+        for (name, schema_definition) in self.definitions.as_ref().unwrap().iter() {
             println!(" Definition: {0}", name);
 
             if let Some(description) = &schema_definition.description {
