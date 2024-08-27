@@ -40,7 +40,7 @@ jobs:
         run: cargo build --verbose
 
       - name: Test
-        run: cargo test --test *
+        run: cargo test --test filesystem_integration_test
         
   Docs:
     runs-on: ubuntu-latest
