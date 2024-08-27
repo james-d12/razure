@@ -11,3 +11,14 @@ chrono = "0.4.38"
 
 [dev-dependencies]
 rstest = "0.22.0"
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"
+restriction = "warn"
+warnings = "warn"
+
+print_stdout = "allow"
+print_stderr = "allow"
+implicit_return = "allow"
+single_call_fn = "allow"

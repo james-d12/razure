@@ -20,16 +20,28 @@ jobs:
         run: cargo build --verbose
 
       - name: Test
-        run: cargo test
+        run: cargo test --lib
 
-      - name: Check
-        run: cargo check
+      - name: Lint
+        run: cargo clippy
 
       - name: Format
         run: cargo fmt --all -- --check
 
       - name: Bench
         run: cargo bench
+        
+  Integration:
+    runs-on: ubuntu-latest
+    name: "Run Integration Tests"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: cargo build --verbose
+
+      - name: Test
+        run: cargo test --tests
+        
   Docs:
     runs-on: ubuntu-latest
     name: "Generate Documentation"

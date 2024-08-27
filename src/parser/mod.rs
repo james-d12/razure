@@ -1,7 +1,7 @@
 mod schema;
 use crate::filesystem::SpecificationFile;
 use crate::parser::schema::swagger::Swagger;
-use serde_json::from_reader;
+use serde_json::{from_reader, error::Result};
 use std::fs::File;
 use std::io::BufReader;
 
@@ -11,7 +11,7 @@ pub fn parse_specification_file(specification_file: &SpecificationFile, print: b
     let reader = BufReader::new(file);
 
     // Deserialize the JSON content to `Swagger`.
-    let swagger: serde_json::error::Result<Swagger> = from_reader(reader);
+    let swagger: Result<Swagger> = from_reader(reader);
 
     match swagger {
         Ok(swagger) => {
