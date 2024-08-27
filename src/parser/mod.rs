@@ -1,7 +1,7 @@
 mod schema;
 use crate::filesystem::SpecificationFile;
 use crate::parser::schema::swagger::Swagger;
-use serde_json::{from_reader, error::Result};
+use serde_json::{error::Result, from_reader};
 use std::fs::File;
 use std::io::BufReader;
 
