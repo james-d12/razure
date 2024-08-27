@@ -18,8 +18,8 @@ pub struct Operation {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json::from_str;
     use crate::parser::schema::parameter::{Parameter, PropertyType};
+    use serde_json::from_str;
 
     #[test]
     fn deserialize_operation_with_reference() {
@@ -50,7 +50,9 @@ mod tests {
 
         let operation: Operation = from_str(json_string.as_str()).unwrap();
 
-        let expected_reference: Reference = Reference { path: parameter_reference.to_string() };
+        let expected_reference: Reference = Reference {
+            path: parameter_reference.to_string(),
+        };
         let mut expected_parameters: Vec<ParameterType> = Vec::new();
         expected_parameters.push(ParameterType::Reference(expected_reference));
 

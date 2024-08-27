@@ -50,9 +50,7 @@ impl Parameter {
             self.name.as_deref().unwrap_or(""),
             self.location.as_deref().unwrap_or(""),
             self.required.unwrap_or(false),
-            self.property_type
-                .as_ref()
-                .unwrap_or(&PropertyType::String)
+            self.property_type.as_ref().unwrap_or(&PropertyType::String)
         )
     }
 }
