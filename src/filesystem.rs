@@ -134,7 +134,7 @@ pub fn get_latest_stable_specifications(output_path: &str) -> HashMap<String, Sp
 
     println!("Getting latest Stable Azure Specifications");
     let url = "https://github.com/Azure/azure-rest-api-specs.git";
-    let specification_path = format!("{0}\\specification", output_path);
+    let specification_path = format!("{0}/specification", output_path);
 
     let already_downloaded = Path::new(specification_path.as_str()).exists();
 
