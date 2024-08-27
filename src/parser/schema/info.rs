@@ -12,8 +12,8 @@ pub struct Info {
 
 #[cfg(test)]
 mod test {
-    use serde_json::from_str;
     use crate::parser::schema::info::Info;
+    use serde_json::from_str;
 
     #[test]
     fn deserialize_info() {
@@ -24,7 +24,8 @@ mod test {
             "description": "Test Description",
             "summary": "Test Summary",
             "termsOfService": "Test TOS"
-        }}"#);
+        }}"#
+        );
 
         let info: Info = from_str(json_string.as_str()).unwrap();
 

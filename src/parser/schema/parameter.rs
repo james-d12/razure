@@ -97,7 +97,7 @@ mod tests {
         assert_eq!(parameter.min_length.unwrap(), 5);
         assert_eq!(parameter.max_length.unwrap(), 64);
     }
-    
+
     #[test]
     fn deserialize_parameter_with_schema() {
         let schema_reference = "#/definitions/SubscriptionName";
@@ -115,11 +115,16 @@ mod tests {
         );
 
         let parameter: Parameter = from_str(json_string.as_str()).unwrap();
-        
+
         assert_eq!(parameter.name.unwrap(), "Test Name");
         assert_eq!(parameter.location.unwrap(), "body");
         assert_eq!(parameter.required.unwrap(), true);
         assert_eq!(parameter.description.unwrap(), "Test Description");
-        assert_eq!(parameter.schema.unwrap(), Reference { path: schema_reference.to_string() });
+        assert_eq!(
+            parameter.schema.unwrap(),
+            Reference {
+                path: schema_reference.to_string()
+            }
+        );
     }
 }
