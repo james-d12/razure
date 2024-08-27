@@ -64,13 +64,13 @@ mod tests {
     use serde_json::from_str;
 
     #[rstest]
-    #[case("string", ParameterType::String)]
-    #[case("number", ParameterType::Number)]
-    #[case("integer", ParameterType::Integer)]
-    #[case("boolean", ParameterType::Boolean)]
-    #[case("array", ParameterType::Array)]
-    #[case("file", ParameterType::File)]
-    fn deserialize_parameter_parameter_type_correct(
+    #[case::string("string", ParameterType::String)]
+    #[case::number("number", ParameterType::Number)]
+    #[case::integer("integer", ParameterType::Integer)]
+    #[case::boolean("boolean", ParameterType::Boolean)]
+    #[case::array("array", ParameterType::Array)]
+    #[case::file("file", ParameterType::File)]
+    fn deserialize_parameter_with_parameter_types(
         #[case] parameter_type_str: String,
         #[case] expected_type: ParameterType,
     ) {
@@ -80,7 +80,9 @@ mod tests {
             "in": "query",
             "required": true,
             "type": "{0}",
-            "description": "Test Description"
+            "description": "Test Description",
+            "minLength": 5,
+            "maxLength": 64
         }}"#,
             parameter_type_str
         );
@@ -91,6 +93,33 @@ mod tests {
         assert_eq!(parameter.description.unwrap(), "Test Description");
         assert_eq!(parameter.location.unwrap(), "query");
         assert_eq!(parameter.required.unwrap(), true);
-        assert_eq!(parameter.parameter_type.unwrap(), expected_type)
+        assert_eq!(parameter.parameter_type.unwrap(), expected_type);
+        assert_eq!(parameter.min_length.unwrap(), 5);
+        assert_eq!(parameter.max_length.unwrap(), 64);
+    }
+    
+    #[test]
+    fn deserialize_parameter_with_schema() {
+        let schema_reference = "#/definitions/SubscriptionName";
+        let json_string = format!(
+            r#"{{
+            "name": "Test Name",
+            "in": "body",
+            "required": true,
+            "description": "Test Description",
+            "schema": {{
+                "$ref": "{0}"
+            }}
+        }}"#,
+            schema_reference
+        );
+
+        let parameter: Parameter = from_str(json_string.as_str()).unwrap();
+        
+        assert_eq!(parameter.name.unwrap(), "Test Name");
+        assert_eq!(parameter.location.unwrap(), "body");
+        assert_eq!(parameter.required.unwrap(), true);
+        assert_eq!(parameter.description.unwrap(), "Test Description");
+        assert_eq!(parameter.schema.unwrap(), Reference { path: schema_reference.to_string() });
     }
 }

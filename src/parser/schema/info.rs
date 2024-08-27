@@ -9,3 +9,29 @@ pub struct Info {
     #[serde(rename = "termsOfService")]
     pub terms_of_service: Option<String>,
 }
+
+#[cfg(test)]
+mod test {
+    use serde_json::from_str;
+    use crate::parser::schema::info::Info;
+
+    #[test]
+    fn deserialize_info() {
+        let json_string = format!(
+            r#"{{
+            "title": "Test Title",
+            "version": "2021-10-01",
+            "description": "Test Description",
+            "summary": "Test Summary",
+            "termsOfService": "Test TOS"
+        }}"#);
+
+        let info: Info = from_str(json_string.as_str()).unwrap();
+
+        assert_eq!(info.title, "Test Title");
+        assert_eq!(info.version, "2021-10-01");
+        assert_eq!(info.description.unwrap(), "Test Description");
+        assert_eq!(info.summary.unwrap(), "Test Summary");
+        assert_eq!(info.terms_of_service.unwrap(), "Test TOS")
+    }
+}
