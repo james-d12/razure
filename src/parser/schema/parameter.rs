@@ -4,7 +4,7 @@ use std::fmt::{Display, Formatter};
 
 #[derive(Debug, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
-pub enum ParameterType {
+pub enum PropertyType {
     String,
     Number,
     Integer,
@@ -13,21 +13,21 @@ pub enum ParameterType {
     File,
 }
 
-impl Display for ParameterType {
+impl Display for PropertyType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let str = match self {
-            ParameterType::String => "string",
-            ParameterType::Number => "number",
-            ParameterType::Integer => "integer",
-            ParameterType::Boolean => "boolean",
-            ParameterType::Array => "array",
-            ParameterType::File => "file",
+            PropertyType::String => "string",
+            PropertyType::Number => "number",
+            PropertyType::Integer => "integer",
+            PropertyType::Boolean => "boolean",
+            PropertyType::Array => "array",
+            PropertyType::File => "file",
         };
         write!(f, "{0}", str)
     }
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq)]
 pub struct Parameter {
     pub name: Option<String>,
     pub description: Option<String>,
@@ -36,7 +36,7 @@ pub struct Parameter {
     pub required: Option<bool>,
     pub schema: Option<Reference>,
     #[serde(rename = "type")]
-    pub parameter_type: Option<ParameterType>,
+    pub property_type: Option<PropertyType>,
     #[serde(rename = "minLength")]
     pub min_length: Option<u16>,
     #[serde(rename = "maxLength")]
@@ -50,9 +50,9 @@ impl Parameter {
             self.name.as_deref().unwrap_or(""),
             self.location.as_deref().unwrap_or(""),
             self.required.unwrap_or(false),
-            self.parameter_type
+            self.property_type
                 .as_ref()
-                .unwrap_or(&ParameterType::String)
+                .unwrap_or(&PropertyType::String)
         )
     }
 }
@@ -64,15 +64,15 @@ mod tests {
     use serde_json::from_str;
 
     #[rstest]
-    #[case::string("string", ParameterType::String)]
-    #[case::number("number", ParameterType::Number)]
-    #[case::integer("integer", ParameterType::Integer)]
-    #[case::boolean("boolean", ParameterType::Boolean)]
-    #[case::array("array", ParameterType::Array)]
-    #[case::file("file", ParameterType::File)]
+    #[case::string("string", PropertyType::String)]
+    #[case::number("number", PropertyType::Number)]
+    #[case::integer("integer", PropertyType::Integer)]
+    #[case::boolean("boolean", PropertyType::Boolean)]
+    #[case::array("array", PropertyType::Array)]
+    #[case::file("file", PropertyType::File)]
     fn deserialize_parameter_with_parameter_types(
         #[case] parameter_type_str: String,
-        #[case] expected_type: ParameterType,
+        #[case] expected_type: PropertyType,
     ) {
         let json_string = format!(
             r#"{{
@@ -93,7 +93,7 @@ mod tests {
         assert_eq!(parameter.description.unwrap(), "Test Description");
         assert_eq!(parameter.location.unwrap(), "query");
         assert_eq!(parameter.required.unwrap(), true);
-        assert_eq!(parameter.parameter_type.unwrap(), expected_type);
+        assert_eq!(parameter.property_type.unwrap(), expected_type);
         assert_eq!(parameter.min_length.unwrap(), 5);
         assert_eq!(parameter.max_length.unwrap(), 64);
     }
