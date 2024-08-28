@@ -78,7 +78,6 @@ impl Swagger {
                 if let Some(description) = &schema_definition.description {
                     println!("  Description: {0}", description);
                 }
-
             }
         }
     }

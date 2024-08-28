@@ -87,7 +87,7 @@ impl Display for DefinitionPropertyType {
             DefinitionPropertyType::Number => "number",
             DefinitionPropertyType::Integer => "integer",
             DefinitionPropertyType::Boolean => "boolean",
-            DefinitionPropertyType::Array => "array"
+            DefinitionPropertyType::Array => "array",
         };
         write!(f, "{0}", property_type_str)
     }
