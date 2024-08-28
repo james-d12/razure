@@ -4,7 +4,7 @@ use crate::parser::schema::response::Response;
 use serde::Deserialize;
 use std::collections::HashMap;
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq)]
 pub struct Operation {
     #[serde(rename = "operationId")]
     pub id: String,

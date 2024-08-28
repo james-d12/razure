@@ -1,8 +1,8 @@
 use crate::parser::schema::parameter_type::ParameterType;
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq)]
 pub struct Response {
-    description: Option<String>,
-    schema: Option<ParameterType>,
+    pub description: Option<String>,
+    pub schema: Option<ParameterType>,
 }

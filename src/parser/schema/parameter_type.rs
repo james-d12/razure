@@ -2,7 +2,7 @@ use crate::parser::schema::parameter::Parameter;
 use crate::parser::schema::reference::Reference;
 use serde::Deserialize;
 
-// Order of them matters: https://serde.rs/enum-representations.html#untagged
+// todo! Order of them matters: https://serde.rs/enum-representations.html#untagged
 
 #[derive(Deserialize, Debug, PartialEq)]
 #[serde(untagged)]

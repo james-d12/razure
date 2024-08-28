@@ -69,19 +69,24 @@ impl Swagger {
     }
 
     fn print_definitions(&self) {
-        for (name, schema_definition) in self.definitions.as_ref().unwrap().iter() {
-            println!(" Definition: {0}", name);
+        let definitions_iter = self.definitions.as_ref();
 
-            if let Some(description) = &schema_definition.description {
-                println!("  Description: {0}", description);
+        if let Some(definitions) = definitions_iter {
+            for (name, schema_definition) in definitions.iter() {
+                println!(" Definition: {0}", name);
+
+                if let Some(description) = &schema_definition.description {
+                    println!("  Description: {0}", description);
+                }
+
             }
         }
     }
 
     pub fn walk(&self) {
         self.print_overview();
-        self.print_paths();
-        self.print_parameters();
+        //self.print_paths();
+        //self.print_parameters();
         self.print_definitions();
     }
 }

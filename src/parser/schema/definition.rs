@@ -2,6 +2,7 @@ use crate::parser::schema::reference::Reference;
 use serde::Deserialize;
 use serde_json::Value;
 use std::collections::HashMap;
+use std::fmt::{Display, Formatter};
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "lowercase")]
@@ -76,4 +77,18 @@ pub struct Definition {
     pub all_of: Option<Vec<Reference>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+}
+
+impl Display for DefinitionPropertyType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let property_type_str = match self {
+            DefinitionPropertyType::Object => "object",
+            DefinitionPropertyType::String => "string",
+            DefinitionPropertyType::Number => "number",
+            DefinitionPropertyType::Integer => "integer",
+            DefinitionPropertyType::Boolean => "boolean",
+            DefinitionPropertyType::Array => "array"
+        };
+        write!(f, "{0}", property_type_str)
+    }
 }
