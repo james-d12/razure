@@ -1,5 +1,5 @@
 use crate::parser::schema::operation::Operation;
-use crate::parser::schema::parameter::Parameter;
+use crate::parser::schema::parameter_type::ParameterType;
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -14,7 +14,7 @@ pub struct PathItem {
     options: Option<Operation>,
     head: Option<Operation>,
     patch: Option<Operation>,
-    parameters: Option<HashMap<String, Parameter>>,
+    parameters: Option<Vec<ParameterType>>,
 }
 
 impl PathItem {
@@ -110,6 +110,7 @@ mod tests {
             property_type: Some(PropertyType::String),
             min_length: Some(5),
             max_length: Some(64),
+            pattern: None,
         };
 
         let mut expected_post_operation_responses: HashMap<String, Response> = HashMap::new();
@@ -123,7 +124,7 @@ mod tests {
         let expected_post_operation: Operation = Operation {
             id: "Test_OperationId".to_string(),
             description: Some("Test Description".to_string()),
-            parameters: expected_post_operation_parameters,
+            parameters: Some(expected_post_operation_parameters),
             responses: expected_post_operation_responses,
             examples: None,
         };

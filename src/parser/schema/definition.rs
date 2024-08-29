@@ -1,4 +1,4 @@
-use crate::parser::schema::reference::Reference;
+use crate::parser::schema::parameter_type::ParameterType;
 use serde::Deserialize;
 use serde_json::Value;
 use std::collections::HashMap;
@@ -74,7 +74,7 @@ pub struct Definition {
     pub required: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "allOf")]
-    pub all_of: Option<Vec<Reference>>,
+    pub all_of: Option<Vec<ParameterType>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
 }

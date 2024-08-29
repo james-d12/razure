@@ -21,6 +21,7 @@ pub struct Swagger {
 
 impl Swagger {
     fn print_overview(&self) {
+        println!("Swagger: {0}", self.swagger);
         if let Some(info) = &self.info {
             println!("{0}", info.title);
             if let Some(description) = &info.description {
@@ -54,12 +55,15 @@ impl Swagger {
                 }
 
                 println!("  Parameters:");
-                for parameter in &operation.parameters {
-                    match parameter {
-                        ParameterType::Reference(reference) => {}
-                        ParameterType::Parameter(inline) => {
-                            if let Some(name) = &inline.name {
-                                println!("   {0}:", name);
+
+                if let Some(parameters) = &operation.parameters {
+                    for parameter in parameters {
+                        match parameter {
+                            ParameterType::Reference(_) => {}
+                            ParameterType::Parameter(inline) => {
+                                if let Some(name) = &inline.name {
+                                    println!("   {0}:", name);
+                                }
                             }
                         }
                     }
@@ -84,8 +88,8 @@ impl Swagger {
 
     pub fn walk(&self) {
         self.print_overview();
-        //self.print_paths();
-        //self.print_parameters();
+        self.print_paths();
+        self.print_parameters();
         self.print_definitions();
     }
 }

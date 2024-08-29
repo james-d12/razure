@@ -1,3 +1,4 @@
+use crate::parser::schema::parameter_type::ParameterType;
 use crate::parser::schema::reference::Reference;
 use serde::Deserialize;
 use std::fmt::{Display, Formatter};
@@ -10,6 +11,7 @@ pub enum PropertyType {
     Integer,
     Boolean,
     Array,
+    Object,
     File,
 }
 
@@ -22,6 +24,7 @@ impl Display for PropertyType {
             PropertyType::Boolean => "boolean",
             PropertyType::Array => "array",
             PropertyType::File => "file",
+            PropertyType::Object => "object",
         };
         write!(f, "{0}", str)
     }
@@ -34,13 +37,14 @@ pub struct Parameter {
     #[serde(rename = "in")]
     pub location: Option<String>,
     pub required: Option<bool>,
-    pub schema: Option<Reference>,
+    pub schema: Option<ParameterType>,
     #[serde(rename = "type")]
     pub property_type: Option<PropertyType>,
     #[serde(rename = "minLength")]
     pub min_length: Option<u16>,
     #[serde(rename = "maxLength")]
     pub max_length: Option<u16>,
+    pub pattern: Option<String>,
 }
 
 impl Parameter {
