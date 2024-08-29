@@ -88,6 +88,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5"
 
 [[package]]
+name = "filesystem"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "git2",
+]
+
+[[package]]
 name = "form_urlencoded"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -189,6 +197,15 @@ dependencies = [
  "pin-project-lite",
  "pin-utils",
  "slab",
+]
+
+[[package]]
+name = "generator"
+version = "0.1.0"
+dependencies = [
+ "filesystem",
+ "parser",
+ "serde_json",
 ]
 
 [[package]]
@@ -377,6 +394,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "parser"
+version = "0.1.0"
+dependencies = [
+ "filesystem",
+ "rstest",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "percent-encoding"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -431,11 +458,9 @@ dependencies = [
 name = "razure"
 version = "0.1.0"
 dependencies = [
- "chrono",
- "git2",
- "rstest",
- "serde",
- "serde_json",
+ "filesystem",
+ "generator",
+ "parser",
 ]
 
 [[package]]
@@ -505,9 +530,9 @@ dependencies = [
 
 [[package]]
 name = "rustc_version"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bfa0f585226d2e68097d4f95d113b15b83a82e819ab25717ec0590d9584ef366"
+checksum = "cfcb3a22ef46e85b45de6ee7e79d063319ebb6594faafcf1c225ea92ab6e9b92"
 dependencies = [
  "semver",
 ]

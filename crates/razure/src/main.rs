@@ -1,14 +1,8 @@
-mod filesystem;
-mod parser;
-
-mod generator;
-
-use crate::filesystem::get_latest_stable_specifications;
-use crate::generator::parameters::generate_parameters;
-use crate::parser::parse_specification_file;
-use razure::generator::parameters::create_parameters_file;
 use std::collections::HashMap;
 use std::time::Instant;
+use filesystem::filesystem::get_latest_stable_specifications;
+use generator::parameters::{create_parameters_file, generate_parameters};
+use parser::parser::parse_specification_file;
 
 fn main() {
     let now = Instant::now();

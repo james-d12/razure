@@ -1,0 +1,9 @@
+[package]
+name = "razure"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+filesystem = { path = "../filesystem" }
+parser = { path = "../parser" }
+generator = { path = "../generator" } 

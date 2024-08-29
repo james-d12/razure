@@ -1,8 +1,8 @@
-use crate::parser::schema::parameter_type::ParameterType;
-use crate::parser::schema::reference::Reference;
-use crate::parser::schema::response::Response;
 use serde::Deserialize;
 use std::collections::HashMap;
+use crate::schema::parameter_type::ParameterType;
+use crate::schema::reference::Reference;
+use crate::schema::response::Response;
 
 #[derive(Deserialize, Debug, PartialEq)]
 pub struct Operation {
@@ -18,8 +18,8 @@ pub struct Operation {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parser::schema::parameter::{Parameter, PropertyType};
     use serde_json::from_str;
+    use crate::schema::parameter::{Parameter, PropertyType};
 
     #[test]
     fn deserialize_operation_with_reference() {

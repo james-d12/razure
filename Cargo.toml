@@ -1,18 +1,11 @@
-[package]
-name = "razure"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+members = [ "crates/razure","crates/filesystem", "crates/generator", "crates/parser"]
+resolver = "2"
 
-[dependencies]
-git2 = "0.19.0"
-serde = { version =  "1.0.209", features = ["derive"] }
-serde_json = "1.0.127"
-chrono = "0.4.38"
-
-[dev-dependencies]
+[workspace.dependencies]
 rstest = "0.22.0"
 
-[lints.clippy]
+[workspace.lints.clippy]
 all = "warn"
 pedantic = "warn"
 restriction = "warn"

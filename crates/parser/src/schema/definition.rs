@@ -1,8 +1,8 @@
-use crate::parser::schema::parameter_type::ParameterType;
 use serde::Deserialize;
 use serde_json::Value;
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
+use crate::schema::parameter_type::ParameterType;
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "lowercase")]

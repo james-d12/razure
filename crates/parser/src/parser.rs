@@ -1,15 +1,12 @@
-pub mod schema;
-
-use crate::filesystem::SpecificationFile;
-use crate::parser::schema::swagger::Swagger;
 use serde_json::{error::Result, from_reader};
 use std::fs::File;
 use std::io::BufReader;
+use filesystem::filesystem::SpecificationFile;
+use crate::schema::swagger::Swagger;
 
 pub fn parse_specification_file(
     specification_file: &SpecificationFile
 ) -> Option<Swagger> {
-    //println!("Parsing Specification File: {0}", specification_file.file_path);
     let file = File::open(&specification_file.file_path).expect("file not found");
     let reader = BufReader::new(file);
 

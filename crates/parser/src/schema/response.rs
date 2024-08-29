@@ -1,4 +1,4 @@
-use crate::parser::schema::parameter_type::ParameterType;
+use crate::schema::parameter_type::ParameterType;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, PartialEq)]

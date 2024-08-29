@@ -1,10 +1,10 @@
-use crate::parser::schema::definition::Definition;
-use crate::parser::schema::info::Info;
-use crate::parser::schema::parameter::Parameter;
-use crate::parser::schema::parameter_type::ParameterType;
-use crate::parser::schema::path_item::PathItem;
 use serde::Deserialize;
 use std::collections::HashMap;
+use crate::schema::definition::Definition;
+use crate::schema::info::Info;
+use crate::schema::parameter::Parameter;
+use crate::schema::parameter_type::ParameterType;
+use crate::schema::path_item::PathItem;
 
 #[derive(Deserialize, Debug)]
 pub struct Swagger {

@@ -1,7 +1,7 @@
-use crate::parser::schema::operation::Operation;
-use crate::parser::schema::parameter_type::ParameterType;
 use serde::Deserialize;
 use std::collections::HashMap;
+use crate::schema::operation::Operation;
+use crate::schema::parameter_type::ParameterType;
 
 #[derive(Deserialize, Debug)]
 pub struct PathItem {
@@ -22,31 +22,31 @@ impl PathItem {
         let mut operations: HashMap<String, &Operation> = HashMap::new();
 
         if let Some(get) = &self.get {
-            operations.insert("GET".to_string(), &get);
+            operations.insert("GET".to_string(), get);
         }
 
         if let Some(put) = &self.put {
-            operations.insert("PUT".to_string(), &put);
+            operations.insert("PUT".to_string(), put);
         }
 
         if let Some(post) = &self.post {
-            operations.insert("POST".to_string(), &post);
+            operations.insert("POST".to_string(), post);
         }
 
         if let Some(delete) = &self.delete {
-            operations.insert("DELETE".to_string(), &delete);
+            operations.insert("DELETE".to_string(), delete);
         }
 
         if let Some(options) = &self.options {
-            operations.insert("OPTIONS".to_string(), &options);
+            operations.insert("OPTIONS".to_string(), options);
         }
 
         if let Some(head) = &self.head {
-            operations.insert("HEAD".to_string(), &head);
+            operations.insert("HEAD".to_string(), head);
         }
 
         if let Some(patch) = &self.patch {
-            operations.insert("PATCH".to_string(), &patch);
+            operations.insert("PATCH".to_string(), patch);
         }
 
         operations
@@ -56,11 +56,10 @@ impl PathItem {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parser::schema::parameter::{Parameter, PropertyType};
-    use crate::parser::schema::parameter_type::ParameterType;
-    use crate::parser::schema::reference::Reference;
-    use crate::parser::schema::response::Response;
     use serde_json::from_str;
+    use crate::schema::parameter::{Parameter, PropertyType};
+    use crate::schema::reference::Reference;
+    use crate::schema::response::Response;
 
     #[test]
     fn deserialize_path_item() {

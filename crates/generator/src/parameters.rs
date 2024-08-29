@@ -1,10 +1,10 @@
-use crate::filesystem::SpecificationFile;
-use crate::generator::string_formatter::format_name_as_valid_struct_identifier;
-use crate::parser::schema::parameter::PropertyType;
-use crate::parser::schema::swagger::Swagger;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{Error, Write};
+use filesystem::filesystem::SpecificationFile;
+use parser::schema::parameter::PropertyType;
+use parser::schema::swagger::Swagger;
+use crate::string_formatter::format_name_as_valid_struct_identifier;
 
 trait RustType {
     fn get_type_as_string(&self) -> Option<&str>;
@@ -54,7 +54,7 @@ pub fn generate_parameters(specification_file: &SpecificationFile, swagger: &Swa
                     }
                 }
             };
-            
+
             Some(structs)
         }
         None => None
@@ -65,7 +65,6 @@ pub fn create_parameters_file(parameter_structs: &HashMap<String, String>) -> Re
     let mut parameters_file = File::create("C:/Users/User/Downloads/razure-output/parameters.rs")?;
 
     for (name, parameter_struct) in parameter_structs {
-        
         let mut str = parameter_struct.clone();
         str.push('\n');
 
