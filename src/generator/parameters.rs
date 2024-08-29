@@ -1,9 +1,9 @@
 use crate::filesystem::SpecificationFile;
+use crate::generator::string_formatter::format_name_as_valid_struct_identifier;
+use crate::parser::schema::parameter::PropertyType;
 use crate::parser::schema::swagger::Swagger;
 use std::collections::HashMap;
 use std::fmt::Display;
-use crate::generator::string_formatter::format_name_as_valid_struct_identifier;
-use crate::parser::schema::parameter::PropertyType;
 
 trait RustType {
     fn get_type_as_string(&self) -> Option<&str>;
@@ -16,7 +16,7 @@ impl RustType for PropertyType {
             PropertyType::Number => Some("f32"),
             PropertyType::Integer => Some("i32"),
             PropertyType::Boolean => Some("bool"),
-            _ => None
+            _ => None,
         }
     }
 }
@@ -38,7 +38,10 @@ pub fn generate_parameters(specification_file: &SpecificationFile, swagger: &Swa
                             let property_type_string = property_type.get_type_as_string();
 
                             if let Some(property_type_string) = property_type_string {
-                                let struct_string = create_struct_simple_type(name, property_type_string.to_string());
+                                let struct_string = create_struct_simple_type(
+                                    name,
+                                    property_type_string.to_string(),
+                                );
                                 println!("{0}", &struct_string);
                                 structs.insert(name.to_string(), struct_string);
                             }
@@ -48,6 +51,6 @@ pub fn generate_parameters(specification_file: &SpecificationFile, swagger: &Swa
                 }
             }
         }
-        None => println!("No Definitions to generate")
+        None => println!("No Definitions to generate"),
     }
 }

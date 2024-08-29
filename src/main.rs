@@ -4,9 +4,9 @@ mod parser;
 mod generator;
 
 use crate::filesystem::get_latest_stable_specifications;
+use crate::generator::parameters::generate_parameters;
 use crate::parser::parse_specification_file;
 use std::time::Instant;
-use crate::generator::parameters::generate_parameters;
 
 fn main() {
     let now = Instant::now();
@@ -18,12 +18,12 @@ fn main() {
 
     for (key, specification_file) in specifications.iter().take(100) {
         let result = parse_specification_file(specification_file, false);
-        
+
         match result {
             Some(swagger) => {
                 generate_parameters(specification_file, &swagger);
             }
-            None => failed_parses += 1
+            None => failed_parses += 1,
         }
     }
 

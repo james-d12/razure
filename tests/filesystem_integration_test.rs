@@ -16,7 +16,7 @@ fn download_azure_gets_latest_specifications() {
         let parsed = parse_specification_file(&specification_file, false);
         match parsed {
             Some(swagger) => {}
-            None => failed_count += 1
+            None => failed_count += 1,
         }
     }
 
