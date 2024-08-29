@@ -37,7 +37,7 @@ pub struct Parameter {
     #[serde(rename = "in")]
     pub location: Option<String>,
     pub required: Option<bool>,
-    pub schema: Option<ParameterType>,
+    pub schema: Option<Reference>,
     #[serde(rename = "type")]
     pub property_type: Option<PropertyType>,
     #[serde(rename = "minLength")]
