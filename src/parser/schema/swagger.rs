@@ -8,15 +8,15 @@ use std::collections::HashMap;
 
 #[derive(Deserialize, Debug)]
 pub struct Swagger {
-    swagger: String,
-    info: Option<Info>,
-    schemes: Option<Vec<String>>,
-    host: Option<String>,
-    consumes: Option<Vec<String>>,
-    produces: Option<Vec<String>>,
-    paths: Option<HashMap<String, PathItem>>,
-    parameters: Option<HashMap<String, Parameter>>,
-    definitions: Option<HashMap<String, Definition>>,
+    pub swagger: String,
+    pub info: Option<Info>,
+    pub schemes: Option<Vec<String>>,
+    pub host: Option<String>,
+    pub consumes: Option<Vec<String>>,
+    pub produces: Option<Vec<String>>,
+    pub paths: Option<HashMap<String, PathItem>>,
+    pub parameters: Option<HashMap<String, Parameter>>,
+    pub definitions: Option<HashMap<String, Definition>>,
 }
 
 impl Swagger {

@@ -12,10 +12,11 @@ fn download_azure_gets_latest_specifications() {
     let specifications = get_latest_stable_specifications(output_path.as_str());
 
     let mut failed_count = 0;
-    for (_, specifcation_file) in &specifications {
-        let parsed = parse_specification_file(&specifcation_file, false);
-        if !parsed {
-            failed_count += 1
+    for (_, specification_file) in &specifications {
+        let parsed = parse_specification_file(&specification_file, false);
+        match parsed {
+            Some(swagger) => {}
+            None => failed_count += 1
         }
     }
 

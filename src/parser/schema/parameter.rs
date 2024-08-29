@@ -1,4 +1,3 @@
-use crate::parser::schema::parameter_type::ParameterType;
 use crate::parser::schema::reference::Reference;
 use serde::Deserialize;
 use std::fmt::{Display, Formatter};

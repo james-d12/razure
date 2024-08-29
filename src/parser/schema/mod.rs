@@ -1,7 +1,7 @@
 mod definition;
 mod info;
 mod operation;
-mod parameter;
+pub mod parameter;
 mod parameter_type;
 mod path_item;
 mod reference;
