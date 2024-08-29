@@ -1,5 +1,5 @@
 [workspace]
-members = [ "crates/razure","crates/filesystem", "crates/generator", "crates/parser"]
+members = [ "crates/cli","crates/filesystem", "crates/generator", "crates/parser"]
 resolver = "2"
 
 [workspace.dependencies]
