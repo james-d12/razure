@@ -6,4 +6,7 @@ edition = "2021"
 [dependencies]
 filesystem = { path = "../filesystem" }
 parser = { path = "../parser" }
-generator = { path = "../generator" } 
+generator = { path = "../generator" }
+
+[lints]
+workspace = true

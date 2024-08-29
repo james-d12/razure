@@ -31,15 +31,12 @@ fn main() {
     let result = create_parameters_file(&all_parameters);
 
     match result {
-        Ok(_) => println!("Created Parameters.rs successfully!"),
-        Err(error) => eprintln!("Could not create Parameters.rs file: {0}", error),
+        Ok(()) => println!("Created Parameters.rs successfully!"),
+        Err(error) => eprintln!("Could not create Parameters.rs file: {error}"),
     }
 
-    println!(
-        "Total number of failed parses: {0}/{1}",
-        failed_parses, specification_len
-    );
+    println!("Total number of failed parses: {failed_parses}/{specification_len}");
 
     let elapsed = now.elapsed();
-    println!("Elapsed: {:.2?}", elapsed);
+    println!("Elapsed: {:.?}", elapsed);
 }

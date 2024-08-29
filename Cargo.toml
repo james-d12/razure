@@ -6,12 +6,14 @@ resolver = "2"
 rstest = "0.22.0"
 
 [workspace.lints.clippy]
-all = "warn"
-pedantic = "warn"
-restriction = "warn"
-warnings = "warn"
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+restriction = { level = "warn", priority = -1 }
+warnings = { level = "warn", priority = -1 }
 
 print_stdout = "allow"
 print_stderr = "allow"
 implicit_return = "allow"
 single_call_fn = "allow"
+arithmetic_side_effects = "allow"
+unused_variables = "allow"

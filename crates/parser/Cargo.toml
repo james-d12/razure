@@ -10,3 +10,6 @@ filesystem = { path = "../filesystem" }
 
 [dev-dependencies]
 rstest.workspace = true
+
+[lints]
+workspace = true
