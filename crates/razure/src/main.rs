@@ -1,8 +1,8 @@
-use std::collections::HashMap;
-use std::time::Instant;
 use filesystem::filesystem::get_latest_stable_specifications;
 use generator::parameters::{create_parameters_file, generate_parameters};
 use parser::parser::parse_specification_file;
+use std::collections::HashMap;
+use std::time::Instant;
 
 fn main() {
     let now = Instant::now();
@@ -32,7 +32,7 @@ fn main() {
 
     match result {
         Ok(_) => println!("Created Parameters.rs successfully!"),
-        Err(error) => eprintln!("Could not create Parameters.rs file: {0}", error)
+        Err(error) => eprintln!("Could not create Parameters.rs file: {0}", error),
     }
 
     println!(

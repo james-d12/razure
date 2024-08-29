@@ -1,6 +1,6 @@
-use serde::Deserialize;
 use crate::schema::parameter::Parameter;
 use crate::schema::reference::Reference;
+use serde::Deserialize;
 // todo! Order of them matters: https://serde.rs/enum-representations.html#untagged
 
 #[derive(Deserialize, Debug, PartialEq)]

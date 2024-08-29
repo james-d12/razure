@@ -1,7 +1,7 @@
-use serde::Deserialize;
-use std::collections::HashMap;
 use crate::schema::operation::Operation;
 use crate::schema::parameter_type::ParameterType;
+use serde::Deserialize;
+use std::collections::HashMap;
 
 #[derive(Deserialize, Debug)]
 pub struct PathItem {
@@ -56,10 +56,10 @@ impl PathItem {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json::from_str;
     use crate::schema::parameter::{Parameter, PropertyType};
     use crate::schema::reference::Reference;
     use crate::schema::response::Response;
+    use serde_json::from_str;
 
     #[test]
     fn deserialize_path_item() {

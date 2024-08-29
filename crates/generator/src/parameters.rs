@@ -1,10 +1,10 @@
-use std::collections::HashMap;
-use std::fs::File;
-use std::io::{Error, Write};
+use crate::string_formatter::format_name_as_valid_struct_identifier;
 use filesystem::filesystem::SpecificationFile;
 use parser::schema::parameter::PropertyType;
 use parser::schema::swagger::Swagger;
-use crate::string_formatter::format_name_as_valid_struct_identifier;
+use std::collections::HashMap;
+use std::fs::File;
+use std::io::{Error, Write};
 
 trait RustType {
     fn get_type_as_string(&self) -> Option<&str>;
@@ -27,7 +27,10 @@ fn create_struct_simple_type(name: &String, struct_type: String) -> String {
     format!(r#"pub struct {0}({1});"#, formatted_name, struct_type)
 }
 
-pub fn generate_parameters(specification_file: &SpecificationFile, swagger: &Swagger) -> Option<HashMap<String, String>> {
+pub fn generate_parameters(
+    specification_file: &SpecificationFile,
+    swagger: &Swagger,
+) -> Option<HashMap<String, String>> {
     let mut structs: HashMap<String, String> = HashMap::new();
 
     match &swagger.parameters {
@@ -53,11 +56,11 @@ pub fn generate_parameters(specification_file: &SpecificationFile, swagger: &Swa
                         _ => {}
                     }
                 }
-            };
+            }
 
             Some(structs)
         }
-        None => None
+        None => None,
     }
 }
 
@@ -67,8 +70,7 @@ pub fn create_parameters_file(parameter_structs: &HashMap<String, String>) -> Re
     for (name, parameter_struct) in parameter_structs {
         let mut str = parameter_struct.clone();
         str.push('\n');
-
-        parameters_file.write(str.as_ref())?;
+        parameters_file.write_all(str.as_ref())?;
     }
 
     Ok(())

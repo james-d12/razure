@@ -1,6 +1,6 @@
+use crate::schema::reference::Reference;
 use serde::Deserialize;
 use std::fmt::{Display, Formatter};
-use crate::schema::reference::Reference;
 
 #[derive(Debug, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
@@ -60,8 +60,8 @@ impl Parameter {
 
 #[cfg(test)]
 mod tests {
-    use rstest::rstest;
     use super::*;
+    use rstest::rstest;
     use serde_json::from_str;
 
     #[rstest]

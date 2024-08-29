@@ -12,8 +12,8 @@ pub struct Info {
 
 #[cfg(test)]
 mod test {
-    use serde_json::from_str;
     use crate::schema::info::Info;
+    use serde_json::from_str;
 
     #[test]
     fn deserialize_info() {
