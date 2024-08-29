@@ -13,7 +13,7 @@ fn download_azure_gets_latest_specifications() {
 
     let mut failed_count = 0;
     for (_, specification_file) in &specifications {
-        let parsed = parse_specification_file(&specification_file, false);
+        let parsed = parse_specification_file(&specification_file);
         match parsed {
             Some(swagger) => {}
             None => failed_count += 1,

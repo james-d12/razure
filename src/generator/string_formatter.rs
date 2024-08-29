@@ -13,6 +13,7 @@ pub fn format_name_as_valid_struct_identifier(name: &String) -> String {
         .trim()
         .replace("-", "")
         .replace("_", "")
+        .replace("$", "")
         .replace(".", "");
 
     formatted_name = capitalize(formatted_name.as_str());

@@ -7,8 +7,7 @@ use std::fs::File;
 use std::io::BufReader;
 
 pub fn parse_specification_file(
-    specification_file: &SpecificationFile,
-    print: bool,
+    specification_file: &SpecificationFile
 ) -> Option<Swagger> {
     //println!("Parsing Specification File: {0}", specification_file.file_path);
     let file = File::open(&specification_file.file_path).expect("file not found");

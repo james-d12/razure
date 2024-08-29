@@ -3,7 +3,8 @@ use crate::generator::string_formatter::format_name_as_valid_struct_identifier;
 use crate::parser::schema::parameter::PropertyType;
 use crate::parser::schema::swagger::Swagger;
 use std::collections::HashMap;
-use std::fmt::Display;
+use std::fs::File;
+use std::io::{Error, Write};
 
 trait RustType {
     fn get_type_as_string(&self) -> Option<&str>;
@@ -26,7 +27,7 @@ fn create_struct_simple_type(name: &String, struct_type: String) -> String {
     format!(r#"pub struct {0}({1});"#, formatted_name, struct_type)
 }
 
-pub fn generate_parameters(specification_file: &SpecificationFile, swagger: &Swagger) {
+pub fn generate_parameters(specification_file: &SpecificationFile, swagger: &Swagger) -> Option<HashMap<String, String>> {
     let mut structs: HashMap<String, String> = HashMap::new();
 
     match &swagger.parameters {
@@ -42,15 +43,34 @@ pub fn generate_parameters(specification_file: &SpecificationFile, swagger: &Swa
                                     name,
                                     property_type_string.to_string(),
                                 );
-                                println!("{0}", &struct_string);
+                                //println!("{0}", &struct_string);
                                 structs.insert(name.to_string(), struct_string);
                             }
+                        }
+                        PropertyType::Object => {
+                            println!("Object type for {0}", name)
                         }
                         _ => {}
                     }
                 }
-            }
+            };
+            
+            Some(structs)
         }
-        None => println!("No Definitions to generate"),
+        None => None
     }
+}
+
+pub fn create_parameters_file(parameter_structs: &HashMap<String, String>) -> Result<(), Error> {
+    let mut parameters_file = File::create("C:/Users/User/Downloads/razure-output/parameters.rs")?;
+
+    for (name, parameter_struct) in parameter_structs {
+        
+        let mut str = parameter_struct.clone();
+        str.push('\n');
+
+        parameters_file.write(str.as_ref())?;
+    }
+
+    Ok(())
 }

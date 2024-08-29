@@ -6,6 +6,8 @@ mod generator;
 use crate::filesystem::get_latest_stable_specifications;
 use crate::generator::parameters::generate_parameters;
 use crate::parser::parse_specification_file;
+use razure::generator::parameters::create_parameters_file;
+use std::collections::HashMap;
 use std::time::Instant;
 
 fn main() {
@@ -16,15 +18,27 @@ fn main() {
     let mut failed_parses = 0;
     let specification_len = specifications.len();
 
-    for (key, specification_file) in specifications.iter().take(100) {
-        let result = parse_specification_file(specification_file, false);
+    let mut all_parameters: HashMap<String, String> = HashMap::new();
+
+    for (key, specification_file) in specifications.iter() {
+        let result = parse_specification_file(specification_file);
 
         match result {
             Some(swagger) => {
-                generate_parameters(specification_file, &swagger);
+                let parameters = generate_parameters(specification_file, &swagger);
+                if let Some(parameters) = parameters {
+                    all_parameters.extend(parameters)
+                }
             }
             None => failed_parses += 1,
         }
+    }
+
+    let result = create_parameters_file(&all_parameters);
+
+    match result {
+        Ok(_) => println!("Created Parameters.rs successfully!"),
+        Err(error) => eprintln!("Could not create Parameters.rs file: {0}", error)
     }
 
     println!(
