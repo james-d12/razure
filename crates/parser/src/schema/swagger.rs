@@ -1,4 +1,4 @@
-use crate::schema::definition::Definition;
+use crate::schema::definition::{Definition, DefinitionType};
 use crate::schema::info::Info;
 use crate::schema::parameter::Parameter;
 use crate::schema::parameter_type::ParameterType;
@@ -77,19 +77,41 @@ impl Swagger {
 
         if let Some(definitions) = definitions_iter {
             for (name, schema_definition) in definitions.iter() {
-                println!(" Definition: {0}", name);
+                match &schema_definition.schema {
+                    DefinitionType::Object { properties } => {
+                        println!(" Definition: {0}", name);
 
-                if let Some(description) = &schema_definition.description {
-                    println!("  Description: {0}", description);
+                        if let Some(description) = &schema_definition.description {
+                            println!("  Description: {0}", description);
+                        }
+
+                        for (name, property) in properties {
+                            println!(" - Name: {name}");
+
+                            if let Some(description) = &property.description {
+                                println!("   Description: {description}")
+                            }
+
+                            if let Some(pattern) = &property.pattern {
+                                println!("   Pattern: {pattern}");
+                            }
+
+                            if let Some(property_type) = &property.definition_property_type {
+                                println!("   Property Type: {property_type}");
+                            }
+                        }
+                    }
+                    DefinitionType::Array { .. } => {}
+                    DefinitionType::Other { .. } => {}
                 }
             }
         }
     }
 
     pub fn walk(&self) {
-        self.print_overview();
-        self.print_paths();
-        self.print_parameters();
+        //self.print_overview();
+        //self.print_paths();
+        //self.print_parameters();
         self.print_definitions();
     }
 }

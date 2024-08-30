@@ -19,29 +19,12 @@ pub enum DefinitionPropertyType {
 #[serde(untagged)]
 pub enum DefinitionType {
     Object {
-        #[serde(flatten)]
         properties: HashMap<String, DefinitionProperty>,
-        #[serde(flatten)]
-        additional: HashMap<String, Value>,
     },
     Array {
-        items: Box<DefinitionType>,
-        #[serde(flatten)]
-        additional: HashMap<String, Value>,
+        items: Vec<DefinitionType>,
     },
-    String {
-        #[serde(flatten)]
-        additional: HashMap<String, Value>,
-    },
-    Number {
-        #[serde(flatten)]
-        additional: HashMap<String, Value>,
-    },
-    Integer {
-        #[serde(flatten)]
-        additional: HashMap<String, Value>,
-    },
-    Boolean {
+    Other {
         #[serde(flatten)]
         additional: HashMap<String, Value>,
     },
@@ -51,17 +34,12 @@ pub enum DefinitionType {
 pub struct DefinitionProperty {
     #[serde(flatten)]
     pub schema: DefinitionType,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub pattern: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "type")]
     pub definition_property_type: Option<DefinitionPropertyType>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "$ref")]
     pub reference: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "readOnly")]
     pub read_only: Option<bool>,
 }

@@ -1,14 +1,9 @@
-use crate::string_formatter::format_name_as_valid_struct_identifier;
-use filesystem::filesystem::SpecificationFile;
+use crate::string_formatter::{format_name_as_valid_struct_identifier, RustType};
 use parser::schema::parameter::PropertyType;
 use parser::schema::swagger::Swagger;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{Error, Write};
-
-trait RustType {
-    fn get_type_as_string(&self) -> Option<&str>;
-}
 
 impl RustType for PropertyType {
     fn get_type_as_string(&self) -> Option<&str> {
@@ -27,10 +22,7 @@ fn create_struct_simple_type(name: &String, struct_type: String) -> String {
     format!(r#"pub struct {0}({1});"#, formatted_name, struct_type)
 }
 
-pub fn generate_parameters(
-    specification_file: &SpecificationFile,
-    swagger: &Swagger,
-) -> Option<HashMap<String, String>> {
+pub fn generate_parameters(swagger: &Swagger) -> Option<HashMap<String, String>> {
     let mut structs: HashMap<String, String> = HashMap::new();
 
     match &swagger.parameters {

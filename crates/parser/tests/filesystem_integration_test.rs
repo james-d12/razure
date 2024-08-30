@@ -21,5 +21,5 @@ fn download_azure_gets_latest_specifications() {
     }
 
     assert_ne!(specifications.len(), 0);
-    assert!(failed_count < 100);
+    assert!(failed_count <= 17);
 }

@@ -1,3 +1,7 @@
+pub trait RustType {
+    fn get_type_as_string(&self) -> Option<&str>;
+}
+
 fn capitalize(s: &str) -> String {
     let mut c = s.chars();
     match c.next() {

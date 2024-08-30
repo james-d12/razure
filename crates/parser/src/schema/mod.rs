@@ -1,4 +1,4 @@
-mod definition;
+pub mod definition;
 mod info;
 mod operation;
 pub mod parameter;
