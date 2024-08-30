@@ -56,8 +56,12 @@ pub fn generate_parameters(swagger: &Swagger) -> Option<HashMap<String, String>>
     }
 }
 
-pub fn create_parameters_file(parameter_structs: &HashMap<String, String>) -> Result<(), Error> {
-    let mut parameters_file = File::create("C:/Users/User/Downloads/razure-output/parameters.rs")?;
+pub fn create_parameters_file(
+    name: &str,
+    parameter_structs: &HashMap<String, String>,
+) -> Result<(), Error> {
+    let mut parameters_file =
+        File::create(format!("C:/Users/User/Downloads/razure-output/{name}.rs"))?;
 
     for (name, parameter_struct) in parameter_structs {
         let mut str = parameter_struct.clone();

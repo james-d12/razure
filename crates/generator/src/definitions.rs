@@ -1,4 +1,6 @@
-use crate::string_formatter::{format_name_as_valid_struct_identifier, RustType};
+use crate::string_formatter::{
+    format_field_as_valid_field_identifier, format_name_as_valid_struct_identifier, RustType,
+};
 use parser::schema::definition::{DefinitionProperty, DefinitionPropertyType, DefinitionType};
 use parser::schema::swagger::Swagger;
 use std::collections::HashMap;
@@ -27,9 +29,11 @@ fn create_struct(name: &String, properties: &HashMap<String, DefinitionProperty>
     for (property_name, property) in properties {
         if let Some(property_type) = &property.definition_property_type {
             let property_type_str = property_type.get_type_as_string();
+            let formatted_property_name = format_field_as_valid_field_identifier(property_name);
 
             if let Some(property_type_str) = property_type_str {
-                let formatted_property = format!("pub {0}: {1},", property_name, property_type_str);
+                let formatted_property =
+                    format!("pub {0}: {1},", formatted_property_name, property_type_str);
                 properties_string.push_str(formatted_property.as_str());
             }
         }
@@ -61,9 +65,12 @@ pub fn generate_definitions(swagger: &Swagger) -> Option<HashMap<String, String>
     }
 }
 
-pub fn create_definitions_file(definition_structs: &HashMap<String, String>) -> Result<(), Error> {
+pub fn create_definitions_file(
+    name: &str,
+    definition_structs: &HashMap<String, String>,
+) -> Result<(), Error> {
     let mut definitions_file =
-        File::create("C:/Users/User/Downloads/razure-output/definitions.rs")?;
+        File::create(format!("C:/Users/User/Downloads/razure-output/{name}.rs"))?;
 
     for (name, parameter_struct) in definition_structs {
         let mut str = parameter_struct.clone();
