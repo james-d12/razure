@@ -38,7 +38,7 @@ pub fn generate(specifications: &HashMap<String, SpecificationFile>) {
 
             match create_file(&file_name, &data) {
                 Ok(()) => {}
-                Err(_) => eprintln!("Could not create file: {0}.", &file_name)
+                Err(_) => eprintln!("Could not create file: {0}.", &file_name),
             }
         }
     }
