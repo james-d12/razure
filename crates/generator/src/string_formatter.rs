@@ -34,9 +34,6 @@ pub fn format_field_as_valid_field_identifier(name: &String) -> String {
 }
 
 pub fn format_name_as_valid_struct_identifier(name: &String) -> String {
-    // Capitalize first letter
-    // Remove hyphens, underscores and white space.
-
     let mut formatted_name = name
         .trim()
         .replace("-", "")

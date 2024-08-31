@@ -2,8 +2,6 @@ use crate::string_formatter::{format_name_as_valid_struct_identifier, RustType};
 use parser::schema::parameter::PropertyType;
 use parser::schema::swagger::Swagger;
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::{Error, Write};
 
 impl RustType for PropertyType {
     fn get_type_as_string(&self) -> Option<&str> {
@@ -54,20 +52,4 @@ pub fn generate_parameters(swagger: &Swagger) -> Option<HashMap<String, String>>
         }
         None => None,
     }
-}
-
-pub fn create_parameters_file(
-    name: &str,
-    parameter_structs: &HashMap<String, String>,
-) -> Result<(), Error> {
-    let mut parameters_file =
-        File::create(format!("C:/Users/User/Downloads/razure-output/{name}.rs"))?;
-
-    for (name, parameter_struct) in parameter_structs {
-        let mut str = parameter_struct.clone();
-        str.push('\n');
-        parameters_file.write_all(str.as_ref())?;
-    }
-
-    Ok(())
 }

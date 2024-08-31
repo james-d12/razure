@@ -6,5 +6,4 @@ mod parameter_type;
 mod path_item;
 mod reference;
 mod response;
-mod schema_format;
 pub mod swagger;

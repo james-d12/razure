@@ -4,9 +4,7 @@ use crate::string_formatter::{
 use parser::schema::definition::{DefinitionProperty, DefinitionPropertyType, DefinitionType};
 use parser::schema::swagger::Swagger;
 use std::collections::HashMap;
-use std::fs::File;
 use std::hash::Hash;
-use std::io::{Error, Write};
 
 impl RustType for DefinitionPropertyType {
     fn get_type_as_string(&self) -> Option<&str> {
@@ -63,20 +61,4 @@ pub fn generate_definitions(swagger: &Swagger) -> Option<HashMap<String, String>
     } else {
         None
     }
-}
-
-pub fn create_definitions_file(
-    name: &str,
-    definition_structs: &HashMap<String, String>,
-) -> Result<(), Error> {
-    let mut definitions_file =
-        File::create(format!("C:/Users/User/Downloads/razure-output/{name}.rs"))?;
-
-    for (name, parameter_struct) in definition_structs {
-        let mut str = parameter_struct.clone();
-        str.push('\n');
-        definitions_file.write_all(str.as_ref())?;
-    }
-
-    Ok(())
 }
