@@ -14,7 +14,7 @@ fn create_file(file_path: &String, parameter_structs: &HashMap<String, String>) 
     let mut parameters_file =
         File::create(file_path)?;
 
-    for (name, parameter_struct) in parameter_structs {
+    for (_, parameter_struct) in parameter_structs {
         let mut str = parameter_struct.clone();
         str.push('\n');
         parameters_file.write_all(str.as_ref())?;
@@ -39,7 +39,7 @@ pub fn generate(specifications: &HashMap<String, SpecificationFile>) {
     let output_src_path: String = format!("{output_path}/src");
     
     match create_project(output_path) {
-        Ok(result) => {
+        Ok(_) => {
             for (name, specification_file) in specifications.iter() {
                 let swagger = parse_specification_file(specification_file);
 
