@@ -10,6 +10,14 @@ fn capitalize(s: &str) -> String {
     }
 }
 
+fn remove_hyphens_for_whitelisted_words(s: &str) -> String {
+    s.replace("a-p-i", "api")
+}
+
+fn remove_illegal_characters(s: &str) -> String {
+    s.replace(".", "_")
+}
+
 fn to_snake_case(s: &str) -> String {
     let mut result = String::new();
     for (i, c) in s.chars().enumerate() {
@@ -45,6 +53,8 @@ pub fn format_name_as_valid_struct_identifier(name: &String) -> String {
     formatted_name
 }
 
-pub fn format_as_file_name(name: &String) -> String {
-    to_snake_case(name.replace(".json", "").as_str())
+pub fn format_as_file_name(s: &String) -> String {
+    //let mut name = remove_hyphens_for_whitelisted_words(s.as_str());
+    let mut name = to_snake_case(s.replace(".json", "").as_str());
+    remove_illegal_characters(name.as_str())
 }

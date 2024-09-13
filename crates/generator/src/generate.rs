@@ -5,19 +5,32 @@ use crate::terminal::generate_cargo_project;
 use filesystem::filesystem::SpecificationFile;
 use parser::parser::parse_specification_file;
 use std::collections::HashMap;
+use std::fs;
 use std::fs::File;
 use std::io::{Error, Write};
 use std::path::Path;
-use std::fs;
 
-fn create_file(file_path: &String, parameter_structs: &HashMap<String, String>) -> Result<(), Error> {
-    let mut parameters_file =
-        File::create(file_path)?;
+fn create_file(
+    file_path: &String,
+    parameter_structs: &HashMap<String, String>,
+) -> Result<(), Error> {
+    let mut parameters_file = File::create(file_path)?;
 
     for (_, parameter_struct) in parameter_structs {
         let mut str = parameter_struct.clone();
         str.push('\n');
         parameters_file.write_all(str.as_ref())?;
+    }
+
+    Ok(())
+}
+
+fn create_lib_file(output_path: &str, file_names: &HashMap<String, String>) -> Result<(), Error> {
+    let lib_file_path = format!("{output_path}/src/lib.rs");
+    let mut lib_file = File::create_new(lib_file_path)?;
+
+    for (_, file_mod_statement) in file_names {
+        lib_file.write_all(file_mod_statement.as_ref())?
     }
 
     Ok(())
@@ -30,16 +43,17 @@ fn create_project(output_path: &str) -> Result<bool, Error> {
         println!("Path: {output_path} does not exist, creating now.");
         fs::create_dir(output_path)?
     }
-    
+
     Ok(generate_cargo_project(output_path))
 }
 
 pub fn generate(specifications: &HashMap<String, SpecificationFile>) {
     let output_path: &str = "C:/Users/User/Downloads/razure-output";
     let output_src_path: String = format!("{output_path}/src");
-    
+
     match create_project(output_path) {
         Ok(_) => {
+            let mut file_mod_statements: HashMap<String, String> = HashMap::new();
             for (name, specification_file) in specifications.iter() {
                 let swagger = parse_specification_file(specification_file);
 
@@ -58,13 +72,23 @@ pub fn generate(specifications: &HashMap<String, SpecificationFile>) {
                     let file_path = format!("{output_src_path}/{file_name}.rs");
 
                     match create_file(&file_path, &data) {
-                        Ok(()) => {}
-                        Err(error) => eprintln!("Could not create file: {0} due to error: {error}", &file_path),
+                        Ok(()) => {
+                            let file_mod_statement = format!("pub mod {file_name};\n");
+                            file_mod_statements.insert(file_name, file_mod_statement);
+                        }
+                        Err(error) => eprintln!(
+                            "Could not create file: {0} due to error: {error}",
+                            &file_path
+                        ),
                     }
                 }
             }
-        }
-        Err(error) => eprintln!("error: {error}")
-    }
 
+            match create_lib_file(output_path, &file_mod_statements) {
+                Ok(_) => println!("Successfully created lib.rs file!"),
+                Err(error) => eprintln!("Could not create lib.rs file due to error: {error}"),
+            }
+        }
+        Err(error) => eprintln!("error: {error}"),
+    }
 }

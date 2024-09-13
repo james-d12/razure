@@ -73,4 +73,3 @@ pub fn check_executable_exists(executable: &str) -> bool {
         }
     }
 }
-
