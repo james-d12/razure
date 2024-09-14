@@ -4,7 +4,7 @@ use crate::string_formatter::format_as_file_name;
 use crate::terminal::generate_cargo_project;
 use filesystem::filesystem::SpecificationFile;
 use parser::parser::parse_specification_file;
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::fs;
 use std::fs::File;
 use std::io::{Error, Write};
@@ -25,7 +25,7 @@ fn create_file(
     Ok(())
 }
 
-fn create_lib_file(output_path: &str, file_names: &HashMap<String, String>) -> Result<(), Error> {
+fn create_lib_file(output_path: &str, file_names: &BTreeMap<String, String>) -> Result<(), Error> {
     let lib_file_path = format!("{output_path}/src/lib.rs");
     let mut lib_file = File::create_new(lib_file_path)?;
 
@@ -53,12 +53,12 @@ pub fn generate(specifications: &HashMap<String, SpecificationFile>) {
 
     match create_project(output_path) {
         Ok(_) => {
-            let mut file_mod_statements: HashMap<String, String> = HashMap::new();
+            let mut file_mod_statements: BTreeMap<String, String> = BTreeMap::new();
             for (name, specification_file) in specifications.iter() {
                 let swagger = parse_specification_file(specification_file);
 
                 if let Some(swagger) = swagger {
-                    let file_name = format!("{0}", format_as_file_name(name));
+                    let file_name = format_as_file_name(name);
                     let mut data: HashMap<String, String> = HashMap::new();
 
                     if let Some(parameters) = generate_parameters(&swagger) {
