@@ -52,11 +52,13 @@ pub fn generate(output_path: &str, specifications: &HashMap<String, Specificatio
     match create_project(output_path) {
         Ok(_) => {
             let mut file_mod_statements: BTreeMap<String, String> = BTreeMap::new();
-            for (name, specification_file) in specifications.iter() {
+            for (_, specification_file) in specifications.iter() {
                 let swagger = parse_specification_file(specification_file);
 
                 if let Some(swagger) = swagger {
-                    let file_name = format_as_file_name(name);
+                    let file_name = format_as_file_name(specification_file.file_name.as_str());
+                    let domain_file_name =
+                        format_as_file_name(specification_file.domain_name.as_str());
                     let mut data: HashMap<String, String> = HashMap::new();
 
                     if let Some(parameters) = generate_parameters(&swagger) {
@@ -72,11 +74,12 @@ pub fn generate(output_path: &str, specifications: &HashMap<String, Specificatio
                         continue;
                     }
 
-                    let file_path = format!("{output_src_path}/{file_name}.rs");
+                    let full_name = format!("{}_{}", domain_file_name, file_name);
+                    let file_path = format!("{}/{}.rs", output_src_path, full_name);
 
                     match create_file(&file_path, &data) {
                         Ok(()) => {
-                            let file_mod_statement = format!("pub mod {file_name};\n");
+                            let file_mod_statement = format!("pub mod {full_name};\n");
                             file_mod_statements.insert(file_name, file_mod_statement);
                         }
                         Err(error) => eprintln!(

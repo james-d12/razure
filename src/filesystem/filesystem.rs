@@ -2,11 +2,46 @@ use chrono::NaiveDate;
 use git2::Repository;
 use std::collections::HashMap;
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 pub struct SpecificationFile {
+    pub file_name: String,
     pub file_path: String,
+    pub domain_name: String,
     pub naive_date: NaiveDate,
+}
+
+fn get_domain_name_for_file(path_item: &PathBuf) -> String {
+    let parent = path_item.parent();
+    let mut root_name: String = String::new();
+
+    match parent {
+        Some(parent) => {
+            let grandparent = parent.parent();
+
+            match grandparent {
+                Some(grandparent) => {
+                    let great_grandparent = grandparent.parent();
+
+                    match great_grandparent {
+                        Some(great_grandparent) => {
+                            root_name = great_grandparent
+                                .file_name()
+                                .unwrap()
+                                .to_str()
+                                .unwrap()
+                                .to_string();
+                        }
+                        None => {}
+                    }
+                }
+                None => {}
+            }
+        }
+        None => {}
+    }
+
+    root_name
 }
 
 fn get_json_files_for_directory(
@@ -44,7 +79,13 @@ fn get_json_files_for_directory(
                 );
 
                 if let Ok(date_time) = date_time {
-                    let key = full_path.file_name().unwrap().to_str().unwrap().to_string();
+                    let file_name = full_path.file_name().unwrap().to_str().unwrap().to_string();
+                    let domain_name = get_domain_name_for_file(&full_path);
+                    let key = format!(
+                        "{domain_name}-{key_file_name}",
+                        domain_name = domain_name.to_lowercase(),
+                        key_file_name = file_name.to_lowercase()
+                    );
 
                     let current_specification_file = specification_files_hashmap.get(&key);
 
@@ -54,7 +95,9 @@ fn get_json_files_for_directory(
                                 specification_files_hashmap.insert(
                                     key,
                                     SpecificationFile {
+                                        file_name: file_name,
                                         file_path: full_path_str.to_string(),
+                                        domain_name: domain_name.to_string(),
                                         naive_date: date_time,
                                     },
                                 );
@@ -64,7 +107,9 @@ fn get_json_files_for_directory(
                             specification_files_hashmap.insert(
                                 key,
                                 SpecificationFile {
+                                    file_name: file_name,
                                     file_path: full_path_str.to_string(),
+                                    domain_name: domain_name.to_string(),
                                     naive_date: date_time,
                                 },
                             );
