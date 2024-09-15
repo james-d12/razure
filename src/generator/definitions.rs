@@ -1,10 +1,8 @@
-use crate::string_formatter::{
+use crate::generator::string_formatter::{
     format_field_as_valid_field_identifier, format_name_as_valid_struct_identifier, RustType,
 };
-use parser::schema::definition::{DefinitionProperty, DefinitionPropertyType, DefinitionType};
-use parser::schema::swagger::Swagger;
+use crate::parser::schema::{DefinitionProperty, DefinitionPropertyType, DefinitionType, Swagger};
 use std::collections::HashMap;
-use std::hash::Hash;
 
 impl RustType for DefinitionPropertyType {
     fn get_type_as_string(&self) -> Option<&str> {

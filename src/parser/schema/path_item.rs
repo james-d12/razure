@@ -1,5 +1,5 @@
-use crate::schema::operation::Operation;
-use crate::schema::parameter_type::ParameterType;
+use crate::parser::schema::Operation;
+use crate::parser::schema::ParameterType;
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -56,9 +56,7 @@ impl PathItem {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::schema::parameter::{Parameter, PropertyType};
-    use crate::schema::reference::Reference;
-    use crate::schema::response::Response;
+    use crate::parser::{Parameter, PropertyType, Reference, Response};
     use serde_json::from_str;
 
     #[test]

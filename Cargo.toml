@@ -1,16 +1,23 @@
-[workspace]
-members = [ "crates/cli","crates/filesystem", "crates/generator", "crates/parser"]
-resolver = "2"
+[package]
+name = "razure"
+version = "0.1.0"
+edition = "2021"
 
-[workspace.dependencies]
+[dependencies]
+serde = { version = "1.0.209", features = ["derive"] }
+serde_json = "1.0.127"
+chrono = "0.4.38"
+git2 = "0.19.0"
+clap = "4.5.16"
+
+[dev-dependencies]
 rstest = "0.22.0"
 
-[workspace.lints.clippy]
+[lints.clippy]
 all = { level = "warn", priority = -1 }
-pedantic = { level = "warn", priority = -1 }
-restriction = { level = "warn", priority = -1 }
+pedantic = { level = "allow", priority = -1 }
+restriction = { level = "allow", priority = -1 }
 warnings = { level = "warn", priority = -1 }
-
 print_stdout = "allow"
 print_stderr = "allow"
 implicit_return = "allow"

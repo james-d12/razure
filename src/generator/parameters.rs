@@ -1,6 +1,5 @@
-use crate::string_formatter::{format_name_as_valid_struct_identifier, RustType};
-use parser::schema::parameter::PropertyType;
-use parser::schema::swagger::Swagger;
+use crate::generator::string_formatter::{format_name_as_valid_struct_identifier, RustType};
+use crate::parser::schema::{PropertyType, Swagger};
 use std::collections::HashMap;
 
 impl RustType for PropertyType {

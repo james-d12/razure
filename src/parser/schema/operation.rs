@@ -1,6 +1,4 @@
-use crate::schema::parameter_type::ParameterType;
-use crate::schema::reference::Reference;
-use crate::schema::response::Response;
+use crate::parser::schema::{ParameterType, Reference, Response};
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -18,7 +16,7 @@ pub struct Operation {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::schema::parameter::{Parameter, PropertyType};
+    use crate::parser::schema::{Parameter, PropertyType};
     use serde_json::from_str;
 
     #[test]

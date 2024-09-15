@@ -1,6 +1,5 @@
-use filesystem::filesystem::get_latest_stable_specifications;
-use parser::parser::parse_specification_file;
-
+use razure::filesystem::get_latest_stable_specifications;
+use razure::parser::parse_specification_file;
 #[test]
 fn download_azure_gets_latest_specifications() {
     let current_directory = std::env::current_dir()

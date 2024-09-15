@@ -1,9 +1,8 @@
-use crate::definitions::generate_definitions;
-use crate::parameters::generate_parameters;
-use crate::string_formatter::format_as_file_name;
-use crate::terminal::generate_cargo_project;
-use filesystem::filesystem::SpecificationFile;
-use parser::parser::parse_specification_file;
+use crate::filesystem::SpecificationFile;
+use crate::generator::{
+    format_as_file_name, generate_cargo_project, generate_definitions, generate_parameters,
+};
+use crate::parser::parse_specification_file;
 use std::collections::{BTreeMap, HashMap};
 use std::fs;
 use std::fs::File;

@@ -1,7 +1,4 @@
-use crate::schema::definition::Definition;
-use crate::schema::info::Info;
-use crate::schema::parameter::Parameter;
-use crate::schema::path_item::PathItem;
+use crate::parser::schema::{Definition, Info, Parameter, PathItem};
 use serde::Deserialize;
 use std::collections::HashMap;
 

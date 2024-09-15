@@ -1,4 +1,4 @@
-use crate::schema::parameter_type::ParameterType;
+use crate::parser::schema::ParameterType;
 use serde::Deserialize;
 use serde_json::Value;
 use std::collections::HashMap;
