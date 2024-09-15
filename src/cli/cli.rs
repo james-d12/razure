@@ -1,7 +1,10 @@
-use clap::{Arg, ArgMatches, Command};
+use clap::{Arg, Command};
+use std::io::{Error, ErrorKind};
+use std::path::Path;
 
 pub struct RazureSettings {
     pub output_folder: String,
+    pub output_specification_folder: String,
 }
 
 fn get_cli() -> Command {
@@ -12,24 +15,54 @@ fn get_cli() -> Command {
         .arg_required_else_help(true)
         .arg(
             Arg::new("output")
-                .short('o') // Alias `-o` for short flag
                 .long("output") // `--output` for long flag
                 .value_name("FILE") // Label for the value in help messages
                 .help("Sets the output file path")
                 .required(true), // This argument is required
         )
+        .arg(
+            Arg::new("output-specification")
+                .long("output-specification") // `--output` for long flag
+                .value_name("FILE") // Label for the value in help messages
+                .help("Sets the output file path for downloading the azure specifications")
+                .required(true), // This argument is required
+        )
 }
-pub fn get_settings() -> RazureSettings {
+pub fn get_settings() -> Result<RazureSettings, std::io::Error> {
     let cli = get_cli();
     let matches = cli.get_matches();
 
     let mut output_folder = String::new();
+    let mut output_specification_folder = String::new();
 
     if let Some(output_path) = matches.get_one::<String>("output") {
         output_folder = output_path.to_string();
     }
 
-    RazureSettings {
-        output_folder: output_folder,
+    if let Some(output_specification_path) = matches.get_one::<String>("output-specification") {
+        output_specification_folder = output_specification_path.to_string();
     }
+
+    let path = Path::new(output_folder.as_str());
+
+    if !path.exists() {
+        return Err(Error::new(
+            ErrorKind::NotFound,
+            "Output folder does not exist",
+        ));
+    }
+
+    let path = Path::new(output_specification_folder.as_str());
+
+    if !path.exists() {
+        return Err(Error::new(
+            ErrorKind::NotFound,
+            "Output specification folder does not exist",
+        ));
+    }
+
+    Ok(RazureSettings {
+        output_folder: output_folder,
+        output_specification_folder: output_specification_folder,
+    })
 }

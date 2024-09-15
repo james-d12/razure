@@ -46,8 +46,7 @@ fn create_project(output_path: &str) -> Result<bool, Error> {
     Ok(generate_cargo_project(output_path))
 }
 
-pub fn generate(specifications: &HashMap<String, SpecificationFile>) {
-    let output_path: &str = "C:/Users/User/Downloads/razure-output";
+pub fn generate(output_path: &str, specifications: &HashMap<String, SpecificationFile>) {
     let output_src_path: String = format!("{output_path}/src");
 
     match create_project(output_path) {
