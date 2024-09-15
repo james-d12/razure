@@ -67,6 +67,11 @@ pub fn generate(output_path: &str, specifications: &HashMap<String, Specificatio
                         data.extend(definitions);
                     }
 
+                    if data.len() <= 0 {
+                        println!("Skipping file: {0} as it has no content.", file_name);
+                        continue;
+                    }
+
                     let file_path = format!("{output_src_path}/{file_name}.rs");
 
                     match create_file(&file_path, &data) {

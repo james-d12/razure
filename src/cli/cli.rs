@@ -1,6 +1,4 @@
 use clap::{Arg, Command};
-use std::io::{Error, ErrorKind};
-use std::path::Path;
 
 pub struct RazureSettings {
     pub output_folder: String,
@@ -41,24 +39,6 @@ pub fn get_settings() -> Result<RazureSettings, std::io::Error> {
 
     if let Some(output_specification_path) = matches.get_one::<String>("output-specification") {
         output_specification_folder = output_specification_path.to_string();
-    }
-
-    let path = Path::new(output_folder.as_str());
-
-    if !path.exists() {
-        return Err(Error::new(
-            ErrorKind::NotFound,
-            "Output folder does not exist",
-        ));
-    }
-
-    let path = Path::new(output_specification_folder.as_str());
-
-    if !path.exists() {
-        return Err(Error::new(
-            ErrorKind::NotFound,
-            "Output specification folder does not exist",
-        ));
     }
 
     Ok(RazureSettings {

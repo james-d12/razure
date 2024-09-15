@@ -26,19 +26,8 @@ fn capitalize(s: &str) -> String {
     }
 }
 
-fn to_snake_case(s: &str) -> String {
-    let mut result = String::new();
-    for (i, c) in s.chars().enumerate() {
-        if c.is_uppercase() {
-            if i != 0 {
-                result.push('_');
-            }
-            result.push(c.to_ascii_lowercase());
-        } else {
-            result.push(c);
-        }
-    }
-    result.replace("-", "_")
+fn to_lower_case(s: &str) -> String {
+    s.to_lowercase().replace(['-', '_', '_', '.'], "")
 }
 
 pub fn format_field_as_valid_field_identifier(name: &String) -> String {
@@ -47,38 +36,25 @@ pub fn format_field_as_valid_field_identifier(name: &String) -> String {
     }
 
     let formatted_name = rename_keyword(name.as_str());
-    to_snake_case(formatted_name)
-        .replace("$", "")
-        .replace("@", "")
-        .replace(".", "_")
+    to_lower_case(formatted_name).replace(['$', '@', '.'], "")
 }
 
 pub fn format_name_as_valid_struct_identifier(name: &String) -> String {
-    let mut formatted_name = name
-        .trim()
-        .replace("-", "")
-        .replace("_", "")
-        .replace("$", "")
-        .replace(".", "")
-        .replace("[", "")
-        .replace("]", "")
-        .replace("(", "")
-        .replace(")", "")
-        .replace("{", "")
-        .replace("}", "")
-        .replace(",", "")
-        .replace("`", "");
+    let mut formatted_name = name.trim().replace(
+        [
+            '-', '_', '$', '.', '[', ']', '(', ')', '{', '}', ',', '`', '`',
+        ],
+        "",
+    );
 
     formatted_name = capitalize(formatted_name.as_str());
     formatted_name
 }
 
-pub fn format_as_file_name(s: &String) -> String {
+pub fn format_as_file_name(s: &str) -> String {
     let mut name = s.replace(".json", "");
-    name = to_snake_case(name.as_str());
-    name = name
-        .replace(".", "_")
-        .replace("a_p_i", "api")
-        .replace("__", "_");
+    name = to_lower_case(&name);
+    name = name.replace("a_p_i", "api");
+    //.replace("__", "_");
     name
 }

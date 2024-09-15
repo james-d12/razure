@@ -113,10 +113,6 @@ fn validate_output_path(output_path: &str) -> bool {
 }
 
 pub fn get_latest_stable_specifications(output_path: &str) -> HashMap<String, SpecificationFile> {
-    // Download azure GitHub repo
-    // Go through each file and get the latest stable *.json file
-    // Put all these files in one flat directory.
-
     let is_output_path_valid = validate_output_path(output_path);
 
     if !is_output_path_valid {
