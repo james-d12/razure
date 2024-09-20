@@ -114,9 +114,7 @@ mod tests {
         expected_post_operation_responses
             .insert("200".to_string(), expected_post_operation_response);
 
-        let mut expected_post_operation_parameters: Vec<ParameterType> = Vec::new();
-        expected_post_operation_parameters
-            .push(ParameterType::Parameter(expected_post_operation_parameter));
+        let expected_post_operation_parameters: Vec<ParameterType> = vec![ParameterType::Parameter(expected_post_operation_parameter)];
 
         let expected_post_operation: Operation = Operation {
             id: "Test_OperationId".to_string(),

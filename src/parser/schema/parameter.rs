@@ -93,7 +93,7 @@ mod tests {
         assert_eq!(parameter.name.unwrap(), "Test Name");
         assert_eq!(parameter.description.unwrap(), "Test Description");
         assert_eq!(parameter.location.unwrap(), "query");
-        assert_eq!(parameter.required.unwrap(), true);
+        assert!(parameter.required.unwrap());
         assert_eq!(parameter.property_type.unwrap(), expected_type);
         assert_eq!(parameter.min_length.unwrap(), 5);
         assert_eq!(parameter.max_length.unwrap(), 64);
@@ -119,7 +119,7 @@ mod tests {
 
         assert_eq!(parameter.name.unwrap(), "Test Name");
         assert_eq!(parameter.location.unwrap(), "body");
-        assert_eq!(parameter.required.unwrap(), true);
+        assert!(parameter.required.unwrap());
         assert_eq!(parameter.description.unwrap(), "Test Description");
         assert_eq!(
             parameter.schema.unwrap(),

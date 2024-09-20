@@ -4,7 +4,7 @@ use serde_json::Value;
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum DefinitionPropertyType {
     Object,
@@ -15,7 +15,7 @@ pub enum DefinitionPropertyType {
     Array,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 #[serde(untagged)]
 pub enum DefinitionType {
     Object {
@@ -30,7 +30,7 @@ pub enum DefinitionType {
     },
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct DefinitionProperty {
     #[serde(flatten)]
     pub schema: DefinitionType,
@@ -70,3 +70,48 @@ impl Display for DefinitionPropertyType {
         write!(f, "{0}", property_type_str)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::from_str;
+
+    #[test]
+    fn deserialize_definition() {
+        let schema_reference = "#/definitions/SubscriptionName";
+        let json_string = r#"{
+            "description": "Properties for the database account",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": ".../../cosmos-db.json#/definitions/ARMProxyResource"
+              }  
+            ],
+            "properties": {
+                "sqlDedicatedGatewayEndpoint": {
+                    "type": "string",
+                    "description": "SqlDedicatedGateway endpoint for the service."
+                }
+            }
+        }"#;
+
+        let definition: Definition = from_str(json_string).unwrap();
+
+        let mut expected_schema_properties: HashMap<String, DefinitionProperty> = HashMap::new();
+        expected_schema_properties.insert("sqlDedicatedGatewayEndpoint".to_string(), DefinitionProperty {
+            schema: DefinitionType::Other { additional: HashMap::new() },
+            description: Some("SqlDedicatedGateway endpoint for the service.".to_string()),
+            pattern: None,
+            definition_property_type: Some(DefinitionPropertyType::String),
+            reference: None,
+            read_only: None,
+        });
+
+        let expected_schema = DefinitionType::Object {
+            properties: expected_schema_properties
+        };
+
+        assert_eq!(definition.schema, expected_schema);
+    }
+}
+
