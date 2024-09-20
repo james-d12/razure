@@ -1,21 +1,17 @@
-use crate::generator::rust::RustGenerator;
 use crate::generator::terminal::generate_cargo_project;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap};
 use std::fs;
 use std::fs::File;
 use std::io::{Error, Write};
 use std::path::Path;
 
-pub fn create_file(file_path: &String, rust_generator: &RustGenerator) -> Result<(), Error> {
+pub fn create_file(
+    file_path: &String,
+    parameter_structs: &HashMap<String, String>,
+) -> Result<(), Error> {
     let mut parameters_file = File::create(file_path)?;
 
-    for parameter_struct in rust_generator.structs.values() {
-        let mut str = parameter_struct.clone();
-        str.push('\n');
-        parameters_file.write_all(str.as_ref())?;
-    }
-
-    for parameter_struct in rust_generator.definitions.values() {
+    for parameter_struct in parameter_structs.values() {
         let mut str = parameter_struct.clone();
         str.push('\n');
         parameters_file.write_all(str.as_ref())?;
