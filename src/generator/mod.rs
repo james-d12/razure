@@ -1,4 +1,4 @@
-mod terminal;
 mod generators;
+mod terminal;
 
 pub use generators::*;

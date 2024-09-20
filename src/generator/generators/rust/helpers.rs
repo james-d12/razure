@@ -1,7 +1,9 @@
-use std::collections::HashMap;
+use crate::generator::rust::{
+    format_field_as_valid_field_identifier, format_name_as_valid_struct_identifier,
+};
 use crate::generator::ConversionType;
-use crate::generator::rust::{format_field_as_valid_field_identifier, format_name_as_valid_struct_identifier};
 use crate::parser::schema::DefinitionProperty;
+use std::collections::HashMap;
 
 pub fn create_struct_simple_type(name: &String, struct_type: String) -> String {
     let formatted_name = format_name_as_valid_struct_identifier(name);

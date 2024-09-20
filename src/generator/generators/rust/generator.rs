@@ -1,9 +1,12 @@
-use std::collections::{BTreeMap, HashMap};
 use crate::filesystem::SpecificationFile;
+use crate::generator::rust::{
+    create_file, create_lib_file, create_project, create_struct, create_struct_simple_type,
+    format_as_file_name,
+};
 use crate::generator::{ConversionType, Generator};
-use crate::generator::rust::{create_file, create_lib_file, create_project, format_as_file_name, create_struct, create_struct_simple_type};
 use crate::parser::parse_specification_file;
 use crate::parser::schema::{Definition, DefinitionType, Parameter, PropertyType};
+use std::collections::{BTreeMap, HashMap};
 
 #[derive(Default)]
 pub struct RustGenerator {
@@ -32,10 +35,8 @@ impl RustGenerator {
                         let property_type_string = property_type.get_type_as_string();
 
                         if let Some(property_type_string) = property_type_string {
-                            let struct_string = create_struct_simple_type(
-                                name,
-                                property_type_string.to_string(),
-                            );
+                            let struct_string =
+                                create_struct_simple_type(name, property_type_string.to_string());
                             self.structs.insert(name.to_string(), struct_string);
                         }
                     }

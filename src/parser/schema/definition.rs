@@ -98,20 +98,24 @@ mod tests {
         let definition: Definition = from_str(json_string).unwrap();
 
         let mut expected_schema_properties: HashMap<String, DefinitionProperty> = HashMap::new();
-        expected_schema_properties.insert("sqlDedicatedGatewayEndpoint".to_string(), DefinitionProperty {
-            schema: DefinitionType::Other { additional: HashMap::new() },
-            description: Some("SqlDedicatedGateway endpoint for the service.".to_string()),
-            pattern: None,
-            definition_property_type: Some(DefinitionPropertyType::String),
-            reference: None,
-            read_only: None,
-        });
+        expected_schema_properties.insert(
+            "sqlDedicatedGatewayEndpoint".to_string(),
+            DefinitionProperty {
+                schema: DefinitionType::Other {
+                    additional: HashMap::new(),
+                },
+                description: Some("SqlDedicatedGateway endpoint for the service.".to_string()),
+                pattern: None,
+                definition_property_type: Some(DefinitionPropertyType::String),
+                reference: None,
+                read_only: None,
+            },
+        );
 
         let expected_schema = DefinitionType::Object {
-            properties: expected_schema_properties
+            properties: expected_schema_properties,
         };
 
         assert_eq!(definition.schema, expected_schema);
     }
 }
-

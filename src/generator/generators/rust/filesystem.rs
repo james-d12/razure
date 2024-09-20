@@ -6,10 +6,7 @@ use std::fs::File;
 use std::io::{Error, Write};
 use std::path::Path;
 
-pub fn create_file(
-    file_path: &String,
-    rust_generator: &RustGenerator,
-) -> Result<(), Error> {
+pub fn create_file(file_path: &String, rust_generator: &RustGenerator) -> Result<(), Error> {
     let mut parameters_file = File::create(file_path)?;
 
     for parameter_struct in rust_generator.structs.values() {
@@ -27,7 +24,10 @@ pub fn create_file(
     Ok(())
 }
 
-pub fn create_lib_file(output_path: &str, file_names: &BTreeMap<String, String>) -> Result<(), Error> {
+pub fn create_lib_file(
+    output_path: &str,
+    file_names: &BTreeMap<String, String>,
+) -> Result<(), Error> {
     let lib_file_path = format!("{output_path}/src/lib.rs");
     let mut lib_file = File::create_new(lib_file_path)?;
 
