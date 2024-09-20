@@ -1,7 +1,3 @@
-pub trait RustType {
-    fn get_type_as_string(&self) -> Option<&str>;
-}
-
 fn rename_keyword(s: &str) -> &str {
     let lowercase = s.to_lowercase();
     match lowercase.as_str() {

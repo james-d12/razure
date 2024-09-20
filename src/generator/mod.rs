@@ -1,13 +1,4 @@
-pub mod generate;
-
-pub use generate::*;
-
-mod definitions;
-mod parameters;
-mod string_formatter;
 mod terminal;
+mod generators;
 
-use definitions::*;
-use parameters::*;
-use string_formatter::*;
-use terminal::*;
+pub use generators::*;
