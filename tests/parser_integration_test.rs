@@ -8,7 +8,7 @@ fn download_azure_gets_latest_specifications() {
         .unwrap()
         .to_string();
     let output_path = format!("{0}\\tests\\output", current_directory);
-    let specifications = get_latest_stable_specifications(output_path.as_str());
+    let specifications = get_latest_stable_specifications(output_path.as_str()).unwrap();
 
     let mut failed_count = 0;
 
