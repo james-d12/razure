@@ -1,4 +1,4 @@
-mod generators;
+pub mod rust;
 mod terminal;
-
-pub use generators::*;
+mod types;
+pub use types::*;
