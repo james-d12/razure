@@ -62,16 +62,25 @@ fn get_json_files_for_directory(
         if is_valid_file(&path) {
             let full_path_str = path.to_str().unwrap();
 
-            let parent_file_name = path.parent().and_then(|p| p.file_name()).and_then(|f| f.to_str());
+            let parent_file_name = path
+                .parent()
+                .and_then(|p| p.file_name())
+                .and_then(|f| f.to_str());
 
             if let Some(parent_file_name) = parent_file_name {
                 if let Ok(date) = NaiveDate::parse_from_str(parent_file_name, "%Y-%m-%d") {
-                    let file_name = path.file_name().and_then(|f| f.to_str()).unwrap_or_default().to_lowercase();
-                    let domain_name = get_domain_name_for_file(&path).unwrap_or_default().to_lowercase();
+                    let file_name = path
+                        .file_name()
+                        .and_then(|f| f.to_str())
+                        .unwrap_or_default()
+                        .to_lowercase();
+                    let domain_name = get_domain_name_for_file(&path)
+                        .unwrap_or_default()
+                        .to_lowercase();
                     let key = format!("{domain_name}-{file_name}");
 
                     let current_specification_file = specification_files_hashmap.get(&key);
-                    
+
                     match current_specification_file {
                         Some(current_specification_file) => {
                             if date > current_specification_file.date {
