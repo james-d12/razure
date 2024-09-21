@@ -3,6 +3,17 @@ use git2::Repository;
 use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
+use thiserror::Error;
+
+type SpecificationFiles = HashMap<String, SpecificationFile>;
+
+#[derive(Debug, Error)]
+pub enum SpecificationFileError {
+    #[error("IO error: {0}")]
+    Io(#[from] std::io::Error),
+    #[error("Git error: {0}")]
+    Git(#[from] git2::Error),
+}
 
 pub struct SpecificationFile {
     pub file_name: String,
@@ -11,50 +22,22 @@ pub struct SpecificationFile {
     pub naive_date: NaiveDate,
 }
 
-fn get_domain_name_for_file(path_item: &PathBuf) -> String {
-    let parent = path_item.parent();
-    let mut root_name: String = String::new();
-
-    match parent {
-        Some(parent) => {
-            let grandparent = parent.parent();
-
-            match grandparent {
-                Some(grandparent) => {
-                    let great_grandparent = grandparent.parent();
-
-                    match great_grandparent {
-                        Some(great_grandparent) => {
-                            root_name = great_grandparent
-                                .file_name()
-                                .unwrap()
-                                .to_str()
-                                .unwrap()
-                                .to_string();
-                        }
-                        None => {}
-                    }
-                }
-                None => {}
-            }
-        }
-        None => {}
-    }
-
-    root_name
+fn get_domain_name_for_file(path_item: &Path) -> Option<String> {
+    let great_grand_parent = path_item.parent()?.parent()?.parent()?;
+    let domain_name = great_grand_parent.file_name()?.to_str()?.to_string();
+    Some(domain_name)
 }
 
 fn get_json_files_for_directory(
-    directory: &str,
-) -> Result<HashMap<String, SpecificationFile>, std::io::Error> {
+    directory: &PathBuf,
+) -> Result<SpecificationFiles, SpecificationFileError> {
     let mut specification_files_hashmap: HashMap<String, SpecificationFile> = HashMap::new();
 
     let files = fs::read_dir(directory)?;
 
     for file in files.flatten() {
         if file.path().is_dir() {
-            let json_files_for_directory =
-                get_json_files_for_directory(file.path().to_str().unwrap())?;
+            let json_files_for_directory = get_json_files_for_directory(&file.path())?;
             specification_files_hashmap.extend(json_files_for_directory);
         }
 
@@ -80,7 +63,8 @@ fn get_json_files_for_directory(
 
                 if let Ok(date_time) = date_time {
                     let file_name = full_path.file_name().unwrap().to_str().unwrap().to_string();
-                    let domain_name = get_domain_name_for_file(&full_path);
+                    let domain_name = get_domain_name_for_file(&full_path).unwrap_or_default();
+
                     let key = format!(
                         "{domain_name}-{key_file_name}",
                         domain_name = domain_name.to_lowercase(),
@@ -123,66 +107,31 @@ fn get_json_files_for_directory(
     Ok(specification_files_hashmap)
 }
 
-fn get_specification_files(specification_path: &str) -> HashMap<String, SpecificationFile> {
-    let json_files = get_json_files_for_directory(specification_path);
+fn validate_output_path(output_path: &str) -> Result<(), SpecificationFileError> {
+    let output_path_exists = Path::new(output_path).try_exists()?;
 
-    json_files.unwrap_or_else(|error| {
-        println!(
-            "There was an error whilst trying to get JSON files: {0}",
-            error
-        );
-        HashMap::new()
-    })
+    if !output_path_exists {
+        println!("Creating path: {0}.", output_path);
+        fs::create_dir(output_path)?;
+    }
+
+    Ok(())
 }
 
-fn validate_output_path(output_path: &str) -> bool {
-    let output_path_exists = Path::new(output_path).try_exists();
-
-    match output_path_exists {
-        Ok(exists) => {
-            if !exists {
-                println!(
-                    "Output path: {0} does not exist. Creating now.",
-                    output_path
-                );
-
-                if let Err(_) = fs::create_dir(output_path) {
-                    return false;
-                }
-            }
-
-            true
-        }
-        Err(_) => false,
-    }
-}
-
-pub fn get_latest_stable_specifications(output_path: &str) -> HashMap<String, SpecificationFile> {
-    let is_output_path_valid = validate_output_path(output_path);
-
-    if !is_output_path_valid {
-        return HashMap::new();
-    }
+pub fn get_latest_stable_specifications(
+    output_path: &str,
+) -> Result<SpecificationFiles, SpecificationFileError> {
+    validate_output_path(output_path)?;
 
     println!("Getting latest Stable Azure Specifications");
-    let url = "https://github.com/Azure/azure-rest-api-specs.git";
-    let specification_path = format!("{0}\\specification", output_path);
+    const AZURE_REST_API_GITHUB_URL: &str = "https://github.com/Azure/azure-rest-api-specs.git";
+    let specification_path = PathBuf::from(output_path).join("specification");
 
-    let already_downloaded = Path::new(specification_path.as_str()).exists();
-
-    if already_downloaded {
+    if specification_path.exists() {
         println!("Azure Repository already downloaded.");
-        return get_specification_files(&specification_path);
+        return get_json_files_for_directory(&specification_path);
     }
 
-    match Repository::clone(url, output_path) {
-        Ok(_) => get_specification_files(&specification_path),
-        Err(error) => {
-            eprintln!(
-                "Failed to get Azure Specification Repository due to error: {0}",
-                error
-            );
-            HashMap::new()
-        }
-    }
+    Repository::clone(AZURE_REST_API_GITHUB_URL, output_path)?;
+    get_json_files_for_directory(&specification_path)
 }
