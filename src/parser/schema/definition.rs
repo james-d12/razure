@@ -67,7 +67,7 @@ impl Display for DefinitionPropertyType {
             DefinitionPropertyType::Boolean => "boolean",
             DefinitionPropertyType::Array => "array",
         };
-        write!(f, "{0}", property_type_str)
+        write!(f, "{property_type_str}")
     }
 }
 
@@ -78,7 +78,6 @@ mod tests {
 
     #[test]
     fn deserialize_definition() {
-        let schema_reference = "#/definitions/SubscriptionName";
         let json_string = r#"{
             "description": "Properties for the database account",
             "type": "object",

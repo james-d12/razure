@@ -132,7 +132,6 @@ pub fn get_latest_stable_specifications(
     validate_output_path(output_path)?;
 
     println!("Getting latest Stable Azure Specifications");
-    const AZURE_REST_API_GITHUB_URL: &str = "https://github.com/Azure/azure-rest-api-specs.git";
     let specification_path = PathBuf::from(output_path).join("specification");
 
     if specification_path.exists() {
@@ -140,6 +139,9 @@ pub fn get_latest_stable_specifications(
         return get_json_files_for_directory(&specification_path);
     }
 
-    Repository::clone(AZURE_REST_API_GITHUB_URL, output_path)?;
+    Repository::clone(
+        "https://github.com/Azure/azure-rest-api-specs.git",
+        output_path,
+    )?;
     get_json_files_for_directory(&specification_path)
 }

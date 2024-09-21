@@ -21,8 +21,6 @@ mod tests {
 
     #[test]
     fn deserialize_operation_with_reference() {
-        let schema_reference = "#/definitions/SubscriptionName";
-
         let parameter_reference = "#/parameters/subscriptionIdParameter";
 
         let json_string = format!(
@@ -51,8 +49,8 @@ mod tests {
         let expected_reference: Reference = Reference {
             path: parameter_reference.to_string(),
         };
-        let mut expected_parameters: Vec<ParameterType> = Vec::new();
-        expected_parameters.push(ParameterType::Reference(expected_reference));
+        let expected_parameters: Vec<ParameterType> =
+            vec![ParameterType::Reference(expected_reference)];
 
         assert_eq!(operation.id, "Test_OperationId");
         assert_eq!(operation.description.unwrap(), "Test Description");
@@ -62,8 +60,6 @@ mod tests {
 
     #[test]
     fn deserialize_operation_with_parameter() {
-        let schema_reference = "#/definitions/SubscriptionName";
-
         let parameter_reference = "#/parameters/subscriptionIdParameter";
 
         let json_string = format!(
@@ -106,8 +102,8 @@ mod tests {
             schema: None,
             pattern: None,
         };
-        let mut expected_parameters: Vec<ParameterType> = Vec::new();
-        expected_parameters.push(ParameterType::Parameter(expected_parameter));
+        let expected_parameters: Vec<ParameterType> =
+            vec![ParameterType::Parameter(expected_parameter)];
 
         assert_eq!(operation.id, "Test_OperationId");
         assert_eq!(operation.description.unwrap(), "Test Description");
@@ -117,8 +113,6 @@ mod tests {
 
     #[test]
     fn deserialize_operation_with_many_parameters() {
-        let schema_reference = "#/definitions/SubscriptionName";
-
         let parameter_reference = "#/parameters/subscriptionIdParameter";
 
         let json_string = format!(
@@ -169,9 +163,10 @@ mod tests {
             path: parameter_reference.to_string(),
         };
 
-        let mut expected_parameters: Vec<ParameterType> = Vec::new();
-        expected_parameters.push(ParameterType::Reference(expected_reference));
-        expected_parameters.push(ParameterType::Parameter(expected_parameter));
+        let expected_parameters: Vec<ParameterType> = vec![
+            ParameterType::Reference(expected_reference),
+            ParameterType::Parameter(expected_parameter),
+        ];
 
         //todo! - This test fails if the reference is added after parameter to expected_parameters. We need to sort and then compare.
 

@@ -5,11 +5,13 @@ use crate::generator::ConversionType;
 use crate::parser::schema::DefinitionProperty;
 use std::collections::HashMap;
 
+#[must_use]
 pub fn create_struct_simple_type(name: &String, struct_type: String) -> String {
     let formatted_name = format_name_as_valid_struct_identifier(name);
-    format!(r#"pub struct {0}({1});"#, formatted_name, struct_type)
+    format!(r#"pub struct {formatted_name}({struct_type});"#)
 }
 
+#[must_use]
 pub fn create_struct(name: &String, properties: &HashMap<String, DefinitionProperty>) -> String {
     let formatted_name = format_name_as_valid_struct_identifier(name);
 
@@ -22,14 +24,11 @@ pub fn create_struct(name: &String, properties: &HashMap<String, DefinitionPrope
 
             if let Some(property_type_str) = property_type_str {
                 let formatted_property =
-                    format!("pub {0}: {1},", formatted_property_name, property_type_str);
+                    format!("pub {formatted_property_name}: {property_type_str},");
                 properties_string.push_str(formatted_property.as_str());
             }
         }
     }
 
-    format!(
-        "pub struct {0} {{ {1} }}",
-        formatted_name, properties_string
-    )
+    format!("pub struct {formatted_name} {{ {properties_string} }}")
 }

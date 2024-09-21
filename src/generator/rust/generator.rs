@@ -47,7 +47,7 @@ impl RustGenerator {
                         }
                     }
                     PropertyType::Object => {
-                        println!("Object type for {0}", name)
+                        println!("Object type for {name}")
                     }
                     _ => {}
                 }
@@ -64,7 +64,7 @@ impl Generator for RustGenerator {
         match create_project(output_path) {
             Ok(_) => {
                 let mut file_mod_statements: BTreeMap<String, String> = BTreeMap::new();
-                for (_, specification_file) in specifications.iter() {
+                for specification_file in specifications.values() {
                     let swagger = parse_specification_file(specification_file);
 
                     if let Some(swagger) = swagger {
@@ -83,12 +83,12 @@ impl Generator for RustGenerator {
                         }
 
                         if data.is_empty() {
-                            println!("Skipping file: {0} as it has no content.", file_name);
+                            println!("Skipping file: {file_name} as it has no content.");
                             continue;
                         }
 
-                        let full_name = format!("{}_{}", domain_file_name, file_name);
-                        let file_path = format!("{}/{}.rs", output_src_path, full_name);
+                        let full_name = format!("{domain_file_name}_{file_name}");
+                        let file_path = format!("{output_src_path}/{full_name}.rs");
 
                         match create_file(&file_path, &data) {
                             Ok(()) => {
@@ -104,7 +104,7 @@ impl Generator for RustGenerator {
                 }
 
                 match create_lib_file(output_path, &file_mod_statements) {
-                    Ok(_) => println!("Successfully created lib.rs file!"),
+                    Ok(()) => println!("Successfully created lib.rs file!"),
                     Err(error) => eprintln!("Could not create lib.rs file due to error: {error}"),
                 }
             }

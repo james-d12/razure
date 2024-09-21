@@ -46,18 +46,6 @@ pub struct Parameter {
     pub pattern: Option<String>,
 }
 
-impl Parameter {
-    pub fn print(&self) {
-        println!(
-            "  Name: {0}\n  Description: {1}\n  Required: {2}\n  Type: {3}",
-            self.name.as_deref().unwrap_or(""),
-            self.location.as_deref().unwrap_or(""),
-            self.required.unwrap_or(false),
-            self.property_type.as_ref().unwrap_or(&PropertyType::String)
-        )
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
