@@ -1,4 +1,4 @@
-use crate::parser::schema::reference::Reference;
+use crate::parser::schema::Reference;
 use serde::Deserialize;
 use std::fmt::{Display, Formatter};
 
@@ -46,22 +46,10 @@ pub struct Parameter {
     pub pattern: Option<String>,
 }
 
-impl Parameter {
-    pub fn print(&self) {
-        println!(
-            "  Name: {0}\n  Description: {1}\n  Required: {2}\n  Type: {3}",
-            self.name.as_deref().unwrap_or(""),
-            self.location.as_deref().unwrap_or(""),
-            self.required.unwrap_or(false),
-            self.property_type.as_ref().unwrap_or(&PropertyType::String)
-        )
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    use rstest::*;
+    use rstest::rstest;
     use serde_json::from_str;
 
     #[rstest]
@@ -93,7 +81,7 @@ mod tests {
         assert_eq!(parameter.name.unwrap(), "Test Name");
         assert_eq!(parameter.description.unwrap(), "Test Description");
         assert_eq!(parameter.location.unwrap(), "query");
-        assert_eq!(parameter.required.unwrap(), true);
+        assert!(parameter.required.unwrap());
         assert_eq!(parameter.property_type.unwrap(), expected_type);
         assert_eq!(parameter.min_length.unwrap(), 5);
         assert_eq!(parameter.max_length.unwrap(), 64);
@@ -119,7 +107,7 @@ mod tests {
 
         assert_eq!(parameter.name.unwrap(), "Test Name");
         assert_eq!(parameter.location.unwrap(), "body");
-        assert_eq!(parameter.required.unwrap(), true);
+        assert!(parameter.required.unwrap());
         assert_eq!(parameter.description.unwrap(), "Test Description");
         assert_eq!(
             parameter.schema.unwrap(),

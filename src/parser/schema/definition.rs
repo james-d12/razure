@@ -1,10 +1,10 @@
-use crate::parser::schema::parameter_type::ParameterType;
+use crate::parser::schema::ParameterType;
 use serde::Deserialize;
 use serde_json::Value;
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum DefinitionPropertyType {
     Object,
@@ -15,53 +15,31 @@ pub enum DefinitionPropertyType {
     Array,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 #[serde(untagged)]
 pub enum DefinitionType {
     Object {
-        #[serde(flatten)]
         properties: HashMap<String, DefinitionProperty>,
-        #[serde(flatten)]
-        additional: HashMap<String, Value>,
     },
     Array {
-        items: Box<DefinitionType>,
-        #[serde(flatten)]
-        additional: HashMap<String, Value>,
+        items: Vec<DefinitionType>,
     },
-    String {
-        #[serde(flatten)]
-        additional: HashMap<String, Value>,
-    },
-    Number {
-        #[serde(flatten)]
-        additional: HashMap<String, Value>,
-    },
-    Integer {
-        #[serde(flatten)]
-        additional: HashMap<String, Value>,
-    },
-    Boolean {
+    Other {
         #[serde(flatten)]
         additional: HashMap<String, Value>,
     },
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct DefinitionProperty {
     #[serde(flatten)]
     pub schema: DefinitionType,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub pattern: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "type")]
     pub definition_property_type: Option<DefinitionPropertyType>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "$ref")]
     pub reference: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "readOnly")]
     pub read_only: Option<bool>,
 }
@@ -89,6 +67,54 @@ impl Display for DefinitionPropertyType {
             DefinitionPropertyType::Boolean => "boolean",
             DefinitionPropertyType::Array => "array",
         };
-        write!(f, "{0}", property_type_str)
+        write!(f, "{property_type_str}")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::from_str;
+
+    #[test]
+    fn deserialize_definition() {
+        let json_string = r#"{
+            "description": "Properties for the database account",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": ".../../cosmos-db.json#/definitions/ARMProxyResource"
+              }  
+            ],
+            "properties": {
+                "sqlDedicatedGatewayEndpoint": {
+                    "type": "string",
+                    "description": "SqlDedicatedGateway endpoint for the service."
+                }
+            }
+        }"#;
+
+        let definition: Definition = from_str(json_string).unwrap();
+
+        let mut expected_schema_properties: HashMap<String, DefinitionProperty> = HashMap::new();
+        expected_schema_properties.insert(
+            "sqlDedicatedGatewayEndpoint".to_string(),
+            DefinitionProperty {
+                schema: DefinitionType::Other {
+                    additional: HashMap::new(),
+                },
+                description: Some("SqlDedicatedGateway endpoint for the service.".to_string()),
+                pattern: None,
+                definition_property_type: Some(DefinitionPropertyType::String),
+                reference: None,
+                read_only: None,
+            },
+        );
+
+        let expected_schema = DefinitionType::Object {
+            properties: expected_schema_properties,
+        };
+
+        assert_eq!(definition.schema, expected_schema);
     }
 }

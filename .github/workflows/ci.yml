@@ -3,6 +3,8 @@ name: CI
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 env:
   CARGO_TERM_COLOR: always
@@ -40,7 +42,7 @@ jobs:
         run: cargo build --verbose
 
       - name: Test
-        run: cargo test --test filesystem_integration_test
+        run: cargo test --test parser_integration_test
         
   Docs:
     runs-on: ubuntu-latest

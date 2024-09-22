@@ -1,10 +1,23 @@
-mod definition;
+// Public items
+pub mod definition;
+pub mod parameter;
+pub mod swagger;
+
+// Private items
 mod info;
 mod operation;
-pub mod parameter;
 mod parameter_type;
 mod path_item;
 mod reference;
 mod response;
-mod schema_format;
-pub mod swagger;
+
+// Flatten use statements
+pub use definition::*;
+pub use info::*;
+pub use operation::*;
+pub use parameter::*;
+pub use parameter_type::*;
+pub use path_item::*;
+pub use reference::*;
+pub use response::*;
+pub use swagger::*;
