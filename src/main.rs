@@ -1,8 +1,8 @@
 mod cli;
 mod filesystem;
 mod generator;
-mod parser;
 mod logger;
+mod parser;
 
 use crate::generator::Generator;
 use filesystem::get_latest_stable_specifications;

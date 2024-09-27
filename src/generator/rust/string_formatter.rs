@@ -1,15 +1,16 @@
 fn rename_keyword(s: &str) -> &str {
     let lowercase = s.to_lowercase();
     match lowercase.as_str() {
-        "type" => "type_",
-        "enum" => "enum_",
-        "ref" => "ref_",
-        "loop" => "loop_",
-        "true" => "true_",
-        "false" => "false_",
-        "self" => "self_",
-        "for" => "for_",
-        "as" => "as_",
+        "type" => "r#type",
+        "enum" => "r#enum",
+        "ref" => "r#ref",
+        "loop" => "r#loop",
+        "true" => "r#true",
+        "false" => "r#false",
+        "self" => "r#this",
+        "for" => "r#for",
+        "as" => "r#as",
+        "use" => "r#use",
         &_ => s,
     }
 }
