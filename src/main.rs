@@ -2,7 +2,6 @@ mod cli;
 mod filesystem;
 mod generator;
 mod parser;
-
 mod logger;
 
 use crate::generator::Generator;
@@ -13,7 +12,6 @@ use std::time::Instant;
 
 fn main() {
     logger::setup_logging();
-
     let settings = cli::get_settings();
 
     match settings {

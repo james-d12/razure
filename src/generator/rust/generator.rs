@@ -110,6 +110,7 @@ impl Generator for RustGenerator {
                 }
             }
             Err(error) => error!("error: {error}"),
+
         }
     }
 }
