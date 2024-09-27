@@ -1,5 +1,6 @@
 use chrono::NaiveDate;
 use git2::Repository;
+use log::info;
 use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -119,7 +120,7 @@ fn validate_output_path(output_path: &str) -> Result<(), SpecificationFileError>
     let output_path_exists = Path::new(output_path).try_exists()?;
 
     if !output_path_exists {
-        println!("Creating path: {0}.", output_path);
+        info!("Creating path: {0}.", output_path);
         fs::create_dir(output_path)?;
     }
 
@@ -131,11 +132,11 @@ pub fn get_latest_stable_specifications(
 ) -> Result<SpecificationFiles, SpecificationFileError> {
     validate_output_path(output_path)?;
 
-    println!("Getting latest Stable Azure Specifications");
+    info!("Getting latest Stable Azure Specifications");
     let specification_path = PathBuf::from(output_path).join("specification");
 
     if specification_path.exists() {
-        println!("Azure Repository already downloaded.");
+        info!("Azure Repository already downloaded.");
         return get_json_files_for_directory(&specification_path);
     }
 

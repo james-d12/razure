@@ -1,3 +1,4 @@
+use log::error;
 use std::process::{Command, Stdio};
 
 #[cfg(target_os = "windows")]
@@ -8,7 +9,7 @@ pub fn generate_cargo_project(path: &str) -> bool {
     match result {
         Ok(status) => status.success(),
         Err(error) => {
-            println!("Error: {0} whilst trying to execute {1}.", error, command);
+            error!("Error: {0} whilst trying to execute {1}.", error, command);
             false
         }
     }

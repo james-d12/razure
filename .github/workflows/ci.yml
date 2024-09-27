@@ -42,7 +42,7 @@ jobs:
         run: cargo build --verbose
 
       - name: Test
-        run: cargo test --test parser_integration_test
+        run: cargo test --test parser_test
         
   Docs:
     runs-on: ubuntu-latest
