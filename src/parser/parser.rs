@@ -1,5 +1,6 @@
 use crate::filesystem::SpecificationFile;
 use crate::parser::schema::Swagger;
+use log::error;
 use serde_json::{error::Result, from_reader};
 use std::fs::File;
 use std::io::BufReader;
@@ -13,7 +14,7 @@ pub fn parse_specification_file(specification_file: &SpecificationFile) -> Optio
     match swagger {
         Ok(swagger) => Some(swagger),
         Err(error) => {
-            eprintln!(
+            error!(
                 "Could not parse: {0} due to error: {1}",
                 specification_file.file_path, error
             );

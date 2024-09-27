@@ -1,4 +1,5 @@
 use crate::generator::terminal::generate_cargo_project;
+use log::info;
 use std::collections::{BTreeMap, HashMap};
 use std::fs;
 use std::fs::File;
@@ -38,7 +39,7 @@ pub fn create_project(output_path: &str) -> Result<bool, Error> {
     let path = Path::new(output_path);
 
     if !path.exists() {
-        println!("Path: {output_path} does not exist, creating now.");
+        info!("Path: {output_path} does not exist, creating now.");
         fs::create_dir(output_path)?
     }
 

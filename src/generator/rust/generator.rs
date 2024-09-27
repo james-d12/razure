@@ -6,6 +6,7 @@ use crate::generator::rust::{
 use crate::generator::{ConversionType, Generator};
 use crate::parser::parse_specification_file;
 use crate::parser::schema::{Definition, DefinitionType, Parameter, PropertyType};
+use log::{error, info, trace};
 use std::collections::{BTreeMap, HashMap};
 
 #[derive(Default)]
@@ -47,7 +48,7 @@ impl RustGenerator {
                         }
                     }
                     PropertyType::Object => {
-                        println!("Object type for {name}")
+                        trace!("Object type for {name}")
                     }
                     _ => {}
                 }
@@ -83,7 +84,7 @@ impl Generator for RustGenerator {
                         }
 
                         if data.is_empty() {
-                            println!("Skipping file: {file_name} as it has no content.");
+                            info!("Skipping file: {file_name} as it has no content.");
                             continue;
                         }
 
@@ -95,7 +96,7 @@ impl Generator for RustGenerator {
                                 let file_mod_statement = format!("pub mod {full_name};\n");
                                 file_mod_statements.insert(file_name, file_mod_statement);
                             }
-                            Err(error) => eprintln!(
+                            Err(error) => error!(
                                 "Could not create file: {0} due to error: {error}",
                                 &file_path
                             ),
@@ -104,11 +105,11 @@ impl Generator for RustGenerator {
                 }
 
                 match create_lib_file(output_path, &file_mod_statements) {
-                    Ok(()) => println!("Successfully created lib.rs file!"),
-                    Err(error) => eprintln!("Could not create lib.rs file due to error: {error}"),
+                    Ok(()) => info!("Successfully created lib.rs file!"),
+                    Err(error) => error!("Could not create lib.rs file due to error: {error}"),
                 }
             }
-            Err(error) => eprintln!("error: {error}"),
+            Err(error) => error!("error: {error}"),
         }
     }
 }

@@ -3,3 +3,4 @@ pub mod generator;
 pub mod parser;
 
 pub mod cli;
+mod logger;
