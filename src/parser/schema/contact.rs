@@ -9,8 +9,8 @@ pub struct Contact {
 
 #[cfg(test)]
 mod test {
-    use serde_json::from_str;
     use crate::parser::schema::contact::Contact;
+    use serde_json::from_str;
 
     #[test]
     fn deserialize_contact() {

@@ -32,6 +32,7 @@ mod tests {
             "post": {{
                 "operationId": "Test_OperationId",
                 "description": "Test Description",
+                "summary": "Test Summary",
                 "parameters": [
                 {{
                      "name": "Test Name",
@@ -83,9 +84,10 @@ mod tests {
         let expected_post_operation: Operation = Operation {
             id: "Test_OperationId".to_string(),
             description: Some("Test Description".to_string()),
+            summary: Some("Test Summary".to_string()),
             parameters: Some(expected_post_operation_parameters),
             responses: expected_post_operation_responses,
-            examples: None,
+            tags: None,
         };
 
         let path_item: PathItem = from_str(json_string.as_str()).unwrap();

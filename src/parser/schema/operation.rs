@@ -1,4 +1,4 @@
-use crate::parser::schema::{ParameterType, Reference, Response};
+use crate::parser::schema::{ParameterType, Response};
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -6,9 +6,9 @@ use std::collections::HashMap;
 pub struct Operation {
     #[serde(rename = "operationId")]
     pub id: String,
-    #[serde(rename = "x-ms-examples")]
-    pub examples: Option<HashMap<String, Reference>>,
+    pub tags: Option<Vec<String>>,
     pub description: Option<String>,
+    pub summary: Option<String>,
     pub parameters: Option<Vec<ParameterType>>,
     pub responses: HashMap<String, Response>,
 }
@@ -16,7 +16,7 @@ pub struct Operation {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parser::schema::{Parameter, PropertyType};
+    use crate::parser::schema::{Parameter, PropertyType, Reference};
     use serde_json::from_str;
 
     #[test]
@@ -27,10 +27,15 @@ mod tests {
             r#"{{
             "operationId": "Test_OperationId",
             "description": "Test Description",
+            "summary": "Test Summary",
             "parameters": [
                 {{
                     "$ref": "{0}"
                 }}
+            ],
+            "tags": [
+                "test-tag1",
+                "test-tag2"
             ],
             "responses": {{
                 "200": {{
@@ -55,7 +60,8 @@ mod tests {
         assert_eq!(operation.id, "Test_OperationId");
         assert_eq!(operation.description.unwrap(), "Test Description");
         assert_eq!(operation.parameters.unwrap(), expected_parameters);
-        assert_eq!(operation.examples, None);
+        assert_eq!(operation.summary.unwrap(), "Test Summary");
+        assert_eq!(operation.tags.unwrap(), vec!["test-tag1", "test-tag2"]);
     }
 
     #[test]
@@ -66,6 +72,7 @@ mod tests {
             r#"{{
             "operationId": "Test_OperationId",
             "description": "Test Description",
+            "summary": "Test Summary",
             "parameters": [
                 {{
                      "name": "Test Name",
@@ -76,6 +83,10 @@ mod tests {
                      "minLength": 5,
                      "maxLength": 64 
                 }}
+            ],
+            "tags": [
+                "test-tag1",
+                "test-tag2"
             ],
             "responses": {{
                 "200": {{
@@ -108,7 +119,8 @@ mod tests {
         assert_eq!(operation.id, "Test_OperationId");
         assert_eq!(operation.description.unwrap(), "Test Description");
         assert_eq!(operation.parameters.unwrap(), expected_parameters);
-        assert_eq!(operation.examples, None);
+        assert_eq!(operation.summary.unwrap(), "Test Summary");
+        assert_eq!(operation.tags.unwrap(), vec!["test-tag1", "test-tag2"]);
     }
 
     #[test]
@@ -119,6 +131,7 @@ mod tests {
             r#"{{
             "operationId": "Test_OperationId",
             "description": "Test Description",
+            "summary": "Test Summary",
             "parameters": [
                 {{
                     "$ref": "{0}"
@@ -132,6 +145,10 @@ mod tests {
                      "minLength": 5,
                      "maxLength": 64 
                 }}
+            ],
+            "tags": [
+                "test-tag1",
+                "test-tag2"
             ],
             "responses": {{
                 "200": {{
@@ -173,6 +190,7 @@ mod tests {
         assert_eq!(operation.id, "Test_OperationId");
         assert_eq!(operation.description.unwrap(), "Test Description");
         assert_eq!(operation.parameters.unwrap(), expected_parameters);
-        assert_eq!(operation.examples, None);
+        assert_eq!(operation.summary.unwrap(), "Test Summary");
+        assert_eq!(operation.tags.unwrap(), vec!["test-tag1", "test-tag2"]);
     }
 }

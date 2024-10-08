@@ -8,8 +8,8 @@ pub struct License {
 
 #[cfg(test)]
 mod test {
-    use serde_json::from_str;
     use crate::parser::schema::license::License;
+    use serde_json::from_str;
 
     #[test]
     fn deserialize_license() {

@@ -1,6 +1,6 @@
-use serde::Deserialize;
 use crate::parser::schema::contact::Contact;
 use crate::parser::schema::license::License;
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug, PartialEq)]
 pub struct Info {
@@ -15,10 +15,10 @@ pub struct Info {
 
 #[cfg(test)]
 mod test {
-    use crate::parser::schema::Info;
-    use serde_json::from_str;
     use crate::parser::schema::contact::Contact;
     use crate::parser::schema::license::License;
+    use crate::parser::schema::Info;
+    use serde_json::from_str;
 
     #[test]
     fn deserialize_info() {
