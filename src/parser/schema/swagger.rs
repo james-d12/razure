@@ -48,8 +48,9 @@ mod tests {
             description: Some(
                 "Azure Cosmos DB Database Service Resource Provider REST API".to_string(),
             ),
-            summary: None,
             terms_of_service: None,
+            contact: None,
+            license: None,
         };
 
         assert_eq!(swagger.swagger, "2.0");

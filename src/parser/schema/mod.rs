@@ -10,6 +10,8 @@ mod parameter_type;
 mod path_item;
 mod reference;
 mod response;
+mod contact;
+mod license;
 
 // Flatten use statements
 pub use definition::*;
