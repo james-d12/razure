@@ -1,3 +1,4 @@
+use crate::parser::schema::external_documentation::ExternalDocumentation;
 use crate::parser::schema::{Definition, Info, Parameter, PathItem, SecuritySchema, Tag};
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -19,6 +20,8 @@ pub struct Swagger {
     pub security_definitions: Option<HashMap<String, SecuritySchema>>,
     pub security: Option<Vec<HashMap<String, Vec<String>>>>,
     pub tags: Option<Vec<Tag>>,
+    #[serde(rename = "externalDocs")]
+    pub external_docs: Option<ExternalDocumentation>,
 }
 
 #[cfg(test)]
