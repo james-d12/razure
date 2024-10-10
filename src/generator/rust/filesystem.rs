@@ -28,7 +28,7 @@ pub fn create_lib_file(
     let lib_file_path = format!("{output_path}/src/lib.rs");
     let mut lib_file = File::create_new(lib_file_path)?;
 
-    for (_, file_mod_statement) in file_names {
+    for file_mod_statement in file_names.values() {
         lib_file.write_all(file_mod_statement.as_ref())?
     }
 

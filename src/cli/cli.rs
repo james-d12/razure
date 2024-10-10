@@ -42,7 +42,7 @@ pub fn get_settings() -> Result<RazureSettings, std::io::Error> {
     }
 
     Ok(RazureSettings {
-        output_folder: output_folder,
-        output_specification_folder: output_specification_folder,
+        output_folder,
+        output_specification_folder,
     })
 }

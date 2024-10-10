@@ -36,7 +36,7 @@ pub fn format_field_as_valid_field_identifier(name: &String) -> String {
     to_lower_case(formatted_name).replace(['$', '@', '.'], "")
 }
 
-pub fn format_name_as_valid_struct_identifier(name: &String) -> String {
+pub fn format_name_as_valid_struct_identifier(name: &str) -> String {
     let mut formatted_name = name.trim().replace(
         [
             '-', '_', '$', '.', '[', ']', '(', ')', '{', '}', ',', '`', '`',

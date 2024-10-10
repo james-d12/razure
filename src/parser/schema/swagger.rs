@@ -1,4 +1,5 @@
-use crate::parser::schema::{Definition, Info, Parameter, PathItem};
+use crate::parser::schema::external_documentation::ExternalDocumentation;
+use crate::parser::schema::{Definition, Info, Parameter, PathItem, SecuritySchema, Tag};
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -8,11 +9,19 @@ pub struct Swagger {
     pub info: Option<Info>,
     pub schemes: Option<Vec<String>>,
     pub host: Option<String>,
+    #[serde(rename = "basePath")]
+    pub base_path: Option<String>,
     pub consumes: Option<Vec<String>>,
     pub produces: Option<Vec<String>>,
     pub paths: Option<HashMap<String, PathItem>>,
     pub parameters: Option<HashMap<String, Parameter>>,
     pub definitions: Option<HashMap<String, Definition>>,
+    #[serde(rename = "securityDefinitions")]
+    pub security_definitions: Option<HashMap<String, SecuritySchema>>,
+    pub security: Option<Vec<HashMap<String, Vec<String>>>>,
+    pub tags: Option<Vec<Tag>>,
+    #[serde(rename = "externalDocs")]
+    pub external_docs: Option<ExternalDocumentation>,
 }
 
 #[cfg(test)]
@@ -29,6 +38,7 @@ mod tests {
                 "description": "Azure Cosmos DB Database Service Resource Provider REST API",
                 "version": "2024-08-15"
             },
+            "basePath": "/basepath",
             "host": "management.azure.com",
             "schemes": [
               "https"
@@ -48,12 +58,14 @@ mod tests {
             description: Some(
                 "Azure Cosmos DB Database Service Resource Provider REST API".to_string(),
             ),
-            summary: None,
             terms_of_service: None,
+            contact: None,
+            license: None,
         };
 
         assert_eq!(swagger.swagger, "2.0");
         assert_eq!(swagger.info.unwrap(), expected_info);
+        assert_eq!(swagger.base_path.unwrap(), "/basepath");
         assert_eq!(swagger.host.unwrap(), "management.azure.com");
         assert_eq!(swagger.schemes.as_ref().unwrap().len(), 1);
         assert_eq!(swagger.schemes.as_ref().unwrap().first().unwrap(), "https");
