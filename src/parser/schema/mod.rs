@@ -12,6 +12,7 @@ mod parameter_type;
 mod path_item;
 mod reference;
 mod response;
+mod security_scheme;
 
 // Flatten use statements
 pub use contact::*;

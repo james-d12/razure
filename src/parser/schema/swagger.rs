@@ -8,6 +8,8 @@ pub struct Swagger {
     pub info: Option<Info>,
     pub schemes: Option<Vec<String>>,
     pub host: Option<String>,
+    #[serde(rename = "basePath")]
+    pub base_path: Option<String>,
     pub consumes: Option<Vec<String>>,
     pub produces: Option<Vec<String>>,
     pub paths: Option<HashMap<String, PathItem>>,
@@ -29,6 +31,7 @@ mod tests {
                 "description": "Azure Cosmos DB Database Service Resource Provider REST API",
                 "version": "2024-08-15"
             },
+            "basePath": "/basepath",
             "host": "management.azure.com",
             "schemes": [
               "https"
@@ -55,6 +58,7 @@ mod tests {
 
         assert_eq!(swagger.swagger, "2.0");
         assert_eq!(swagger.info.unwrap(), expected_info);
+        assert_eq!(swagger.base_path.unwrap(), "/basepath");
         assert_eq!(swagger.host.unwrap(), "management.azure.com");
         assert_eq!(swagger.schemes.as_ref().unwrap().len(), 1);
         assert_eq!(swagger.schemes.as_ref().unwrap().first().unwrap(), "https");
