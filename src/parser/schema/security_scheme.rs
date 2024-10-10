@@ -35,15 +35,15 @@ pub enum SecuritySchemaFlow {
 pub struct SecuritySchema {
     #[serde(rename = "type")]
     pub security_type: SecuritySchemaType,
-    pub name: String,
+    pub name: Option<String>,
     #[serde(rename = "in")]
-    pub location: SecuritySchemaLocation,
-    pub flow: SecuritySchemaFlow,
+    pub location: Option<SecuritySchemaLocation>,
+    pub flow: Option<SecuritySchemaFlow>,
     #[serde(rename = "authorizationUrl")]
-    pub authorization_url: String,
+    pub authorization_url: Option<String>,
     #[serde(rename = "tokenUrl")]
-    pub token_url: String,
-    pub scopes: HashMap<String, String>,
+    pub token_url: Option<String>,
+    pub scopes: Option<HashMap<String, String>>,
     pub description: Option<String>,
 }
 
@@ -56,7 +56,7 @@ mod tests {
     use std::collections::HashMap;
 
     #[test]
-    fn deserialize_schema() {
+    fn deserialize_security_schema() {
         let json_string = r#"{
             "type": "oauth2",
             "name": "oauth2",
@@ -80,14 +80,17 @@ mod tests {
         expected_scopes.insert(String::from("read:pets"), String::from("read your pets"));
 
         assert_eq!(security_schema.security_type, SecuritySchemaType::OAuth2);
-        assert_eq!(security_schema.name, "oauth2");
-        assert_eq!(security_schema.location, SecuritySchemaLocation::Header);
-        assert_eq!(security_schema.flow, SecuritySchemaFlow::Implicit);
+        assert_eq!(security_schema.name.unwrap(), "oauth2");
         assert_eq!(
-            security_schema.authorization_url,
+            security_schema.location.unwrap(),
+            SecuritySchemaLocation::Header
+        );
+        assert_eq!(security_schema.flow.unwrap(), SecuritySchemaFlow::Implicit);
+        assert_eq!(
+            security_schema.authorization_url.unwrap(),
             "http://swagger.io/api/oauth/dialog"
         );
-        assert_eq!(security_schema.token_url, "https://token-url.com");
-        assert_eq!(security_schema.scopes, expected_scopes)
+        assert_eq!(security_schema.token_url.unwrap(), "https://token-url.com");
+        assert_eq!(security_schema.scopes.unwrap(), expected_scopes)
     }
 }

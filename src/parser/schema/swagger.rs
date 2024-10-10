@@ -1,4 +1,4 @@
-use crate::parser::schema::{Definition, Info, Parameter, PathItem};
+use crate::parser::schema::{Definition, Info, Parameter, PathItem, SecuritySchema, Tag};
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -15,6 +15,10 @@ pub struct Swagger {
     pub paths: Option<HashMap<String, PathItem>>,
     pub parameters: Option<HashMap<String, Parameter>>,
     pub definitions: Option<HashMap<String, Definition>>,
+    #[serde(rename = "securityDefinitions")]
+    pub security_definitions: Option<HashMap<String, SecuritySchema>>,
+    pub security: Option<Vec<HashMap<String, Vec<String>>>>,
+    pub tags: Option<Vec<Tag>>,
 }
 
 #[cfg(test)]

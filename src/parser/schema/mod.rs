@@ -5,6 +5,7 @@ pub mod swagger;
 
 // Private items
 mod contact;
+mod external_documentation;
 mod info;
 mod license;
 mod operation;
@@ -13,6 +14,7 @@ mod path_item;
 mod reference;
 mod response;
 mod security_scheme;
+mod tag;
 
 // Flatten use statements
 pub use contact::*;
@@ -25,4 +27,6 @@ pub use parameter_type::*;
 pub use path_item::*;
 pub use reference::*;
 pub use response::*;
+pub use security_scheme::*;
 pub use swagger::*;
+pub use tag::*;
