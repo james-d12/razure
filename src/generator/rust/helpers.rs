@@ -6,13 +6,13 @@ use crate::parser::schema::DefinitionProperty;
 use std::collections::HashMap;
 
 #[must_use]
-pub fn create_struct_simple_type(name: &String, struct_type: String) -> String {
+pub fn create_struct_simple_type(name: &str, struct_type: String) -> String {
     let formatted_name = format_name_as_valid_struct_identifier(name);
     format!(r#"pub struct {formatted_name}({struct_type});"#)
 }
 
 #[must_use]
-pub fn create_struct(name: &String, properties: &HashMap<String, DefinitionProperty>) -> String {
+pub fn create_struct(name: &str, properties: &HashMap<String, DefinitionProperty>) -> String {
     let formatted_name = format_name_as_valid_struct_identifier(name);
 
     let mut properties_string = String::new();

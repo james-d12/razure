@@ -19,7 +19,7 @@ pub struct PathItem {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parser::{Parameter, PropertyType, Reference, Response};
+    use crate::parser::{Parameter, PropertyType, Reference, Response, Schema};
     use serde_json::from_str;
     use std::collections::HashMap;
 
@@ -90,8 +90,27 @@ mod tests {
             description: Some("The Service resource parameters.".to_string()),
             location: Some("body".to_string()),
             required: Some(true),
-            schema: Some(Reference {
-                path: "/#/parameters/accountNameParameter".to_string(),
+            schema: Some(Schema {
+                reference: Some("/#/parameters/accountNameParameter".to_string()),
+                format: None,
+                title: None,
+                description: None,
+                default: None,
+                multiple_of: None,
+                maximum: None,
+                exclusive_maximum: None,
+                minimum: None,
+                exclusive_minimum: None,
+                max_length: None,
+                min_length: None,
+                pattern: None,
+                max_items: None,
+                min_items: None,
+                unique_items: None,
+                max_properties: None,
+                min_properties: None,
+                required: None,
+                schema_type: None,
             }),
             property_type: None,
             min_length: None,

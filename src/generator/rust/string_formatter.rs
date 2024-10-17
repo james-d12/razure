@@ -11,6 +11,8 @@ fn rename_keyword(s: &str) -> &str {
         "for" => "r#for",
         "as" => "r#as",
         "use" => "r#use",
+        "where" => "r#where",
+        "virtual" => "r#virtual",
         &_ => s,
     }
 }
