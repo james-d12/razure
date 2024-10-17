@@ -17,10 +17,10 @@ log = "0.4.22"
 rstest = "0.22.0"
 
 [lints.clippy]
-all = { level = "warn", priority = -1 }
-pedantic = { level = "allow", priority = -1 }
-restriction = { level = "allow", priority = -1 }
-warnings = { level = "warn", priority = -1 }
+all = { level = "warn" }
+pedantic = { level = "allow" }
+restriction = { level = "allow" }
+warnings = { level = "warn" }
 print_stdout = "allow"
 print_stderr = "allow"
 implicit_return = "allow"

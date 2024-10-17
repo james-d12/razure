@@ -1,4 +1,4 @@
-use crate::parser::schema::Reference;
+use crate::parser::schema::Schema;
 use serde::Deserialize;
 use std::fmt::{Display, Formatter};
 
@@ -36,7 +36,7 @@ pub struct Parameter {
     #[serde(rename = "in")]
     pub location: Option<String>,
     pub required: Option<bool>,
-    pub schema: Option<Reference>,
+    pub schema: Option<Schema>,
     #[serde(rename = "type")]
     pub property_type: Option<PropertyType>,
     #[serde(rename = "minLength")]
@@ -49,6 +49,7 @@ pub struct Parameter {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::parser::schema::SchemaType;
     use rstest::rstest;
     use serde_json::from_str;
 
@@ -88,7 +89,7 @@ mod tests {
     }
 
     #[test]
-    fn deserialize_parameter_with_schema() {
+    fn deserialize_parameter_with_schema_ref() {
         let schema_reference = "#/definitions/SubscriptionName";
         let json_string = format!(
             r#"{{
@@ -110,10 +111,56 @@ mod tests {
         assert!(parameter.required.unwrap());
         assert_eq!(parameter.description.unwrap(), "Test Description");
         assert_eq!(
-            parameter.schema.unwrap(),
-            Reference {
-                path: schema_reference.to_string()
-            }
+            parameter.schema.unwrap().reference.unwrap(),
+            schema_reference.to_string()
         );
+    }
+
+    #[test]
+    fn deserialize_parameter_with_schema() {
+        let schema_reference = "#/definitions/SubscriptionName";
+        let json_string = format!(
+            r#"{{
+            "name": "Test Name",
+            "in": "body",
+            "description": "Test Description",
+            "required": true,
+            "schema": {{
+              "type": "object",
+              "format": "file"
+            }}
+        }}"#
+        );
+
+        let parameter: Parameter = from_str(json_string.as_str()).unwrap();
+
+        let expected_schema = Schema {
+            reference: None,
+            format: Some("file".to_string()),
+            title: None,
+            description: None,
+            default: None,
+            multiple_of: None,
+            maximum: None,
+            exclusive_maximum: None,
+            minimum: None,
+            exclusive_minimum: None,
+            max_length: None,
+            min_length: None,
+            pattern: None,
+            max_items: None,
+            min_items: None,
+            unique_items: None,
+            max_properties: None,
+            min_properties: None,
+            required: None,
+            schema_type: Some(SchemaType::Object),
+        };
+
+        assert_eq!(parameter.name.unwrap(), "Test Name");
+        assert_eq!(parameter.location.unwrap(), "body");
+        assert!(parameter.required.unwrap());
+        assert_eq!(parameter.description.unwrap(), "Test Description");
+        assert_eq!(parameter.schema.unwrap(), expected_schema);
     }
 }
