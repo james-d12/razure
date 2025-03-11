@@ -1,6 +1,6 @@
-use std::collections::HashMap;
 use razure::filesystem::get_latest_stable_specifications;
 use razure::parser::parse_specification_file;
+use std::collections::HashMap;
 
 #[test]
 fn download_azure_gets_latest_specifications() {
