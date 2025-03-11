@@ -68,7 +68,7 @@ impl Generator for RustGenerator {
                 for specification_file in specifications.values() {
                     let swagger = parse_specification_file(specification_file);
 
-                    if let Some(swagger) = swagger {
+                    if let Ok(swagger) = swagger {
                         let file_name = format_as_file_name(specification_file.file_name.as_str());
                         let domain_file_name =
                             format_as_file_name(specification_file.domain_name.as_str());

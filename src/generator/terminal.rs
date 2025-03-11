@@ -26,7 +26,7 @@ pub fn check_executable_exists(executable: &str) -> bool {
     match result {
         Ok(status) => status.success(),
         Err(error) => {
-            println!(
+            error!(
                 "Error: {0} whilst trying to check executable {1} exists.",
                 error, executable
             );
@@ -43,7 +43,7 @@ pub fn generate_cargo_project(path: &str) -> bool {
     match result {
         Ok(status) => status.success(),
         Err(error) => {
-            println!(
+            error!(
                 "Error: {0} whilst trying to execute {1}.",
                 error.to_string(),
                 command
@@ -65,7 +65,7 @@ pub fn check_executable_exists(executable: &str) -> bool {
     match result {
         Ok(status) => status.success(),
         Err(error) => {
-            println!(
+            error!(
                 "Error: {0} whilst trying to check executable {1} exists.",
                 error.to_string(),
                 executable
