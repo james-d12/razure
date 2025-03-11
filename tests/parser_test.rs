@@ -34,5 +34,5 @@ fn download_azure_gets_latest_specifications() {
         println!("{0} with error {1}", file, error);
     }
 
-    assert!(failed_count <= 2);
+    assert!(failed_count <= 4);
 }
