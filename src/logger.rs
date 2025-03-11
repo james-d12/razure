@@ -7,9 +7,7 @@ use log4rs::encode::pattern::PatternEncoder;
 use log4rs::filter::threshold::ThresholdFilter;
 use log4rs::Config;
 
-pub fn setup_logging() {
-    let level = LevelFilter::Info;
-
+pub fn setup_logging(level: LevelFilter) {
     let now = Local::now();
 
     // Format the time as a string (e.g., YYYY-MM-DD_HH-MM-SS)

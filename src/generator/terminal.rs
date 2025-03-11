@@ -1,4 +1,3 @@
-use log::error;
 use std::process::{Command, Stdio};
 
 #[cfg(target_os = "windows")]

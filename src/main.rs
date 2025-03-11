@@ -11,11 +11,11 @@ use log::{error, trace};
 use std::time::Instant;
 
 fn main() {
-    logger::setup_logging();
     let settings = cli::get_settings();
 
     match settings {
         Ok(settings) => {
+            logger::setup_logging(settings.log_level);
             let now = Instant::now();
             let specifications =
                 get_latest_stable_specifications(settings.output_specification_folder.as_str());
